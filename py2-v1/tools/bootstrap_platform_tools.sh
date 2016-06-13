@@ -28,7 +28,7 @@ GSLVER=2.1
 FREETYPEVER=2.6.3
 
 
-PYTHON_PKGS_TO_INSTALL="numpy==1.11.0 scipy==0.16.1 readline==6.2.4.1 ipython==3.2.3 pyfits==3.4 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1"
+PYTHON_PKGS_TO_INSTALL="numpy==1.11.0 scipy==0.16.1 readline==6.2.4.1 ipython==3.2.3 pyfits==3.4 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
 
 # Extra things for grid tools
 #GLOBUSVER=5.2.4
