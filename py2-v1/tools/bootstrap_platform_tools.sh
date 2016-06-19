@@ -14,19 +14,20 @@ GMPVER=6.1.0
 PYVER=2.7.11
 PYDISTRIBUTEVER=0.6.49
 PIPVER=8.1.2
-GNUPLOTVER=4.6.3
-TCLVER=8.5.14
-BZIPVER=1.0.6
-XZVER=5.2.2
 BOOSTVER=1.57.0
 HDF5VER=1.10.0
 NETCDFVER=4.4.0
 FFTWVER=3.3.4
+GSLVER=2.1
+
+GNUPLOTVER=4.6.3
+TCLVER=8.5.14
+BZIPVER=1.0.6
+XZVER=5.2.2
 CMAKEVER=3.5.2
 FLACVER=1.3.1
-GSLVER=2.1
 FREETYPEVER=2.6.3
-
+CFITSIOVER=3.390
 
 PYTHON_PKGS_TO_INSTALL="numpy==1.11.0 scipy==0.16.1 readline==6.2.4.1 ipython==3.2.3 pyfits==3.4 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
 
@@ -221,6 +222,17 @@ if [ ! -f $SROOT/bin/gnuplot ]; then
 	make $JFLAG
 	# Fix brokenness in build system with hard dependencies on optional files
 	touch docs/gnuplot-eldoc.el docs/gnuplot-eldoc.elc
+	make install
+fi
+
+# CFITSIO
+if [ ! -f $SROOT/lib/libcfitsio.a ]; then
+	cd $1
+	$FETCH http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
+	tar xvzf cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
+	cd cfitsio
+	./configure --prefix=$SROOT
+	make $JFLAG
 	make install
 fi
 
