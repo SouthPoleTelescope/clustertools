@@ -226,13 +226,14 @@ if [ ! -f $SROOT/bin/gnuplot ]; then
 fi
 
 # CFITSIO
-if [ ! -f $SROOT/lib/libcfitsio.a ]; then
+if [ ! -f $SROOT/lib/libcfitsio.so ]; then
 	cd $1
 	$FETCH http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
 	tar xvzf cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
 	cd cfitsio
-	./configure --prefix=$SROOT
+	./configure --prefix=$SROOT --enable-bzip2=$SROOT
 	make $JFLAG
+	make $JFLAG shared
 	make install
 fi
 
