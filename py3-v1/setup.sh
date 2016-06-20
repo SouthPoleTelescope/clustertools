@@ -12,6 +12,10 @@ SROOTBASE=$(cd "$DIR" && echo "$(pwd -L)")
 SROOT=$SROOTBASE/$OS_ARCH
 SITE_CMAKE_DIR=$SROOTBASE/site_cmake
 
+if [ ! -d $SROOT ]; then
+	echo "WARNING: The requested toolset ($SROOTBASE) has not yet been installed for this platform ($OS_ARCH). Please run (or have your admin run) \$SROOTBASE/tools/bootstrap_platform_tools.sh." >&2
+fi
+
 CC=$SROOT/bin/gcc
 CXX=$SROOT/bin/g++
 FC=$SROOT/bin/gfortran
@@ -20,7 +24,7 @@ PATH=$SROOT/bin:$PATH
 
 PKG_CONFIG_PATH=$SROOT/lib/pkgconfig:$PKG_CONFIG_PATH
 LD_LIBRARY_PATH=$SROOT/lib:$SROOT/lib64:$LD_LIBRARY_PATH
-PYTHONPATH=$SROOT/lib/python2.7/site-packages:$PYTHONPATH
+PYTHONPATH=$SROOT/lib/python3.5/site-packages:$PYTHONPATH
 MANPATH=$SROOT/man:$SROOT/share/man:$MANPATH
 
 # MPI, if installed
