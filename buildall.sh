@@ -17,7 +17,6 @@ for toolset in py2-v1; do (
 		fakesroot=0
 	fi
 
-	(
 	# Install/update tools. This cannot fail.
 	(eval `$SBASE/$toolset/setup.sh` && $SROOTBASE/tools/bootstrap_platform_tools.sh $1/tools) || exit 1
 
