@@ -196,6 +196,11 @@ if [ ! -f $SROOT/lib/libboost_python.so ]; then
 	$FETCH http://liquidtelecom.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
 	tar xvjf $tarball.tar.bz2
 	cd $tarball
+	# Fix stupidity in 1.61.0
+	if [ "$BOOSTVER" = 1.61.0 ]; then
+		$FETCH https://github.com/scopeInfinity/iostreams/commit/61a91325d936b0a9e6baaed6c974d0808e166822.patch
+		patch -p2 < 61a91325d936b0a9e6baaed6c974d0808e166822.patch
+	fi
 	./bootstrap.sh --prefix=$SROOT --with-python=$SROOT/bin/python --with-python-root=$SROOT
 	./b2 $JFLAG
 	./b2 install
