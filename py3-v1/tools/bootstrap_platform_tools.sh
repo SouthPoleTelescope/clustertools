@@ -11,17 +11,17 @@ MPCVER=1.0.3
 MPFRVER=3.1.4
 GMPVER=6.1.0
 
-PYVER=3.5.1
-PYDISTRIBUTEVER=0.6.49
+PYVER=3.5.2
+PYSETUPTOOLSVER=24.0.3
 PIPVER=8.1.2
-BOOSTVER=1.57.0
+BOOSTVER=1.61.0
 HDF5VER=1.10.0
 NETCDFVER=4.4.0
 FFTWVER=3.3.4
 GSLVER=2.1
 
 GNUPLOTVER=4.6.3
-TCLVER=8.5.14
+TCLVER=8.6.5
 BZIPVER=1.0.6
 XZVER=5.2.2
 CMAKEVER=3.5.2
@@ -29,7 +29,7 @@ FLACVER=1.3.1
 FREETYPEVER=2.6.3
 CFITSIOVER=3.390
 
-PYTHON_PKGS_TO_INSTALL="numpy==1.11.0 scipy==0.16.1 readline==6.2.4.1 ipython==3.2.3 pyfits==3.4 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
+PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5.0.0 pyfits==3.4 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
 
 # Extra things for grid tools
 #GLOBUSVER=5.2.4
@@ -131,8 +131,8 @@ fi
 # TCL/TK
 if [ ! -f $SROOT/bin/tclsh ]; then
 	cd $1
-	$FETCH http://iweb.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tcl$TCLVER-src.tar.gz
-	$FETCH http://iweb.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tk$TCLVER-src.tar.gz
+	$FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tcl$TCLVER-src.tar.gz
+	$FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tk$TCLVER-src.tar.gz
 	tar xvzf tcl$TCLVER-src.tar.gz
 	tar xvzf tk$TCLVER-src.tar.gz
 	cd tcl$TCLVER/unix
@@ -143,7 +143,7 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	cd tk$TCLVER/unix
 	# TK is an optional dependency
 	(./configure --prefix=$SROOT && make && make install) || true
-	ln -s $SROOT/bin/tclsh8.5 $SROOT/bin/tclsh
+	ln -s $SROOT/bin/tclsh8.6 $SROOT/bin/tclsh
 fi
 
 # Python
@@ -167,14 +167,14 @@ if [ ! -f $SROOT/bin/python ]; then
 	fi
 fi
 
-# Python Distribute
+# Python Setuptools
 if python -c 'import setuptools'; then
 	true
 else
 	cd $1
-	$FETCH http://pypi.python.org/packages/source/d/distribute/distribute-$PYDISTRIBUTEVER.tar.gz
-	tar xvzf distribute-$PYDISTRIBUTEVER.tar.gz
-	cd distribute-$PYDISTRIBUTEVER
+	$FETCH https://pypi.python.org/packages/84/24/610d8bb87219ed6d0928018b7b35ac6f6f6ef27a71ed6a2d0cfb68200f65/setuptools-$PYSETUPTOOLSVER.tar.gz
+	tar xvzf setuptools-$PYSETUPTOOLSVER.tar.gz
+	cd setuptools-$PYSETUPTOOLSVER
 	python setup.py build
 	python setup.py install --prefix=$SROOT
 fi
@@ -193,7 +193,7 @@ fi
 if [ ! -f $SROOT/lib/libboost_python.so ]; then
 	cd $1
 	tarball=boost_`echo $BOOSTVER | tr . _`
-	$FETCH http://iweb.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
+	$FETCH http://liquidtelecom.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
 	tar xvjf $tarball.tar.bz2
 	cd $tarball
 	./bootstrap.sh --prefix=$SROOT --with-python=$SROOT/bin/python --with-python-root=$SROOT
@@ -225,7 +225,7 @@ fi
 # Gnuplot
 if [ ! -f $SROOT/bin/gnuplot ]; then
 	cd $1
-	$FETCH http://iweb.dl.sourceforge.net/project/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
+	$FETCH http://liquidtelecom.dl.sourceforge.net/project/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
 	tar xvzf gnuplot-$GNUPLOTVER.tar.gz
 	cd gnuplot-$GNUPLOTVER
 	./configure --prefix=$SROOT --without-linux-vga --without-lisp-files --with-bitmap-terminals
