@@ -28,6 +28,7 @@ CMAKEVER=3.5.2
 FLACVER=1.3.1
 FREETYPEVER=2.6.3
 CFITSIOVER=3.390
+OPENBLASVER=0.2.18
 
 PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5.0.0 pyfits==3.4 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
 
@@ -209,11 +210,21 @@ fi
 # CMake
 if [ ! -f $SROOT/bin/cmake ]; then
 	cd $1
-	$FETCH http://cmake.org/files/v3.5/cmake-$CMAKEVER.tar.gz
+	$FETCH http://cmake.org/files/v$(echo $CMAKEVER | cut -f 1,2 -d .)/cmake-$CMAKEVER.tar.gz
 	tar xvzf cmake-$CMAKEVER.tar.gz
 	cd cmake-$CMAKEVER
 	./configure --prefix=$SROOT
 	make $JFLAG; make install
+fi
+
+# OpenBLAS
+if [ ! -f $SROOT/lib/libopenblas.so ]; then
+	cd $1
+	$FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
+	tar xvzf v$OPENBLASVER.tar.gz
+	cd OpenBLAS-$OPENBLASVER
+	make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+	make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 fi
 
 # Freetype (needed for matplotlib, not always installed)
@@ -276,6 +287,8 @@ fi
 
 # Dependencies for python stuff
 export HDF5_DIR=$SROOT
+export BLAS=$SROOT/lib/libopenblas.so
+export LAPACK=$SROOT/lib/libopenblas.so
 #export LDFLAGS="-L$SROOT/lib" # Needed for Darwin? add back later, breaks RHEL
 
 # FFTW
