@@ -16,6 +16,7 @@ is currently py2-v1.
 Current defined toolsets:
 
 - py2-v1: Python 2.7.11-based tools
+- py3-v1: Python 3.5.2-based tools
 
 Installing software for the first time
 --------------------------------------
@@ -28,7 +29,7 @@ script as follows:
 
 The scratch directory is used for temporary files only and will be deleted when
 the script completes. It should not be a network filesystem. It usually takes
-2-3 hours to finish compiling and installing everything.
+2-3 hours to finish compiling and installing each toolset.
 
 If you have a heterogeneous cluster with with multiple CPU architectures and/or
 operating systems, then run buildall.sh on each of them. The software will be
