@@ -15,7 +15,7 @@ PYVER=2.7.11
 PYSETUPTOOLSVER=24.0.3
 PIPVER=8.1.2
 BOOSTVER=1.57.0
-HDF5VER=1.10.0
+HDF5VER=1.8.17
 NETCDFVER=4.4.0
 FFTWVER=3.3.4
 GSLVER=2.1
@@ -30,7 +30,7 @@ FREETYPEVER=2.6.3
 CFITSIOVER=3.390
 OPENBLASVER=0.2.18
 
-PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5.0.0 pyfits==3.0.7 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.2 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
+PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5.0.0 pyfits==3.0.7 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.3.1 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0"
 
 # Extra things for grid tools
 #GLOBUSVER=5.2.4
@@ -251,7 +251,7 @@ fi
 # HDF5
 if [ ! -f $SROOT/bin/h5ls ]; then
 	cd $1
-	$FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$(echo $HDF5VER | cut -d . -f 1,2)/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
+	$FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
 	tar xvjf hdf5-$HDF5VER.tar.bz2
 	cd hdf5-$HDF5VER
 	./configure --prefix=$SROOT --enable-build-mode=production --enable-cxx --enable-strict-format-checks --with-zlib=/usr
