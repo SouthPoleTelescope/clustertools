@@ -18,7 +18,7 @@ for toolset in py2-v1 py3-v1; do (
 	fi
 
 	# Install/update tools. This cannot fail.
-	(eval `$SBASE/$toolset/setup.sh` && $SROOTBASE/tools/bootstrap_platform_tools.sh $1/tools) || exit 1
+	(eval `$SBASE/$toolset/setup.sh` && $SROOTBASE/tools/bootstrap_platform_tools.sh $1/tools 2>&1 | tee "$logfile") || exit 1
 
 	if [ $fakesroot -eq 1 ]; then
 		rm $SROOT
