@@ -23,6 +23,7 @@ GSLVER=2.1
 GNUPLOTVER=4.6.3
 TCLVER=8.6.5
 BZIPVER=1.0.6
+ZLIBVER=1.2.8 # NB: built conditionally
 XZVER=5.2.2
 CMAKEVER=3.5.2
 FLACVER=1.3.1
@@ -115,6 +116,17 @@ if [ ! -f $SROOT/bin/bzip2 ]; then
 	cp libbz2.so.1.0.6 libbz2.so.1.0 $SROOT/lib
 	cd $SROOT/lib
 	ln -s libbz2.so.1.0 libbz2.so
+fi
+
+# Zlib
+if [ ! -f $SROOT/lib/libz.so -a ! -f /usr/include/zlib.h ]; then
+	cd $1
+	$FETCH http://zlib.net/zlib-$ZLIBVER.tar.gz
+	tar xzvf zlib-$ZLIBVER.tar.gz
+	cd zlib-$ZLIBVER
+	./configure --prefix=$SROOT
+	make $JFLAG
+	make install
 fi
 
 # XZ
