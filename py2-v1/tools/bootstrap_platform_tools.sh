@@ -266,6 +266,7 @@ if [ ! -f $SROOT/bin/h5ls ]; then
 	$FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
 	tar xvjf hdf5-$HDF5VER.tar.bz2
 	cd hdf5-$HDF5VER
+	export HDF5_CC=$SROOT/bin/gcc
 	./configure --prefix=$SROOT --enable-build-mode=production --enable-cxx --enable-strict-format-checks --with-zlib=/usr
 	make $JFLAG
 	make install
