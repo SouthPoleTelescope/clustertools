@@ -41,11 +41,17 @@ PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5
 
 # Figure out how to download things
 if wget -q -O /dev/null http://www.google.com; then
-	FETCH="wget --no-check-certificate"
+	FETCH () {
+		test -f `basename $1` || wget --no-check-certificate $1
+	}
 elif curl -Ls -o /dev/null http://www.google.com; then
-	FETCH="curl -kLO"
+	FETCH () {
+		test -f `basename $1` || curl -kLO $1
+	}
 elif fetch -o /dev/null http://www.google.com; then
-	FETCH="fetch"
+	FETCH () {
+		test -f `basename $1` || fetch $1
+	}
 else
 	echo "Cannot figure out how to download things!"
 	exit 1
@@ -64,39 +70,39 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	unset FC
 
 	cd $1
-	$FETCH http://gmplib.org/download/gmp/gmp-$GMPVER.tar.bz2
+	FETCH http://gmplib.org/download/gmp/gmp-$GMPVER.tar.bz2
 	tar xjvf gmp-$GMPVER.tar.bz2
 	cd gmp-$GMPVER
 	./configure --prefix=$SROOT
 	make $JFLAG; make install
 
 	cd $1
-	$FETCH http://www.mpfr.org/mpfr-current/mpfr-$MPFRVER.tar.gz
+	FETCH http://www.mpfr.org/mpfr-current/mpfr-$MPFRVER.tar.gz
 	tar xvzf mpfr-$MPFRVER.tar.gz
 	cd mpfr-$MPFRVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
 	make $JFLAG; make install
 
 	cd $1
-	$FETCH ftp://ftp.gnu.org/gnu/mpc/mpc-$MPCVER.tar.gz
+	FETCH ftp://ftp.gnu.org/gnu/mpc/mpc-$MPCVER.tar.gz
 	tar xvzf mpc-$MPCVER.tar.gz
 	cd mpc-$MPCVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
 	make $JFLAG; make install
 
 	cd $1
-	$FETCH http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILSVER.tar.gz
+	FETCH http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILSVER.tar.gz
 	tar xvzf binutils-$BINUTILSVER.tar.gz
 	cd binutils-$BINUTILSVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
 	make $JFLAG; make install
 
 	cd $1
-	$FETCH http://www.netgull.com/gcc/releases/gcc-$GCCVER/gcc-$GCCVER.tar.gz
+	FETCH http://www.netgull.com/gcc/releases/gcc-$GCCVER/gcc-$GCCVER.tar.gz
 	tar xvzf gcc-$GCCVER.tar.gz
 	cd gcc-$GCCVER
 	# Subshell here prevents some kind of space madness on RHEL6
-	(./configure --prefix=$SROOT --with-gmp=$SROOT --disable-multilib --enable-languages=c,c++,fortran)
+	(LD=`which ld` AS=`which as` LD_FOR_TARGET=`which ld` ./configure --prefix=$SROOT --with-gmp=$SROOT --disable-multilib --enable-languages=c,c++,fortran)
 	make $JFLAG; make install
 
 	export CC=$SROOT/bin/gcc
@@ -107,7 +113,7 @@ fi
 # Bzip2
 if [ ! -f $SROOT/bin/bzip2 ]; then
 	cd $1
-	$FETCH http://www.bzip.org/$BZIPVER/bzip2-$BZIPVER.tar.gz
+	FETCH http://www.bzip.org/$BZIPVER/bzip2-$BZIPVER.tar.gz
 	tar xvzf bzip2-$BZIPVER.tar.gz
 	cd bzip2-$BZIPVER
 	make install PREFIX=$SROOT
@@ -121,7 +127,7 @@ fi
 # Zlib
 if [ ! -f $SROOT/lib/libz.so -a ! -f /usr/include/zlib.h ]; then
 	cd $1
-	$FETCH http://zlib.net/zlib-$ZLIBVER.tar.gz
+	FETCH http://zlib.net/zlib-$ZLIBVER.tar.gz
 	tar xzvf zlib-$ZLIBVER.tar.gz
 	cd zlib-$ZLIBVER
 	./configure --prefix=$SROOT
@@ -132,7 +138,7 @@ fi
 # XZ
 if [ ! -f $SROOT/bin/xz ]; then
 	cd $1
-	$FETCH http://tukaani.org/xz/xz-$XZVER.tar.gz
+	FETCH http://tukaani.org/xz/xz-$XZVER.tar.gz
 	tar xvzf xz-$XZVER.tar.gz
 	cd xz-$XZVER
 	./configure --prefix=$SROOT --enable-shared
@@ -144,8 +150,8 @@ fi
 # TCL/TK
 if [ ! -f $SROOT/bin/tclsh ]; then
 	cd $1
-	$FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tcl$TCLVER-src.tar.gz
-	$FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tk$TCLVER-src.tar.gz
+	FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tcl$TCLVER-src.tar.gz
+	FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tk$TCLVER-src.tar.gz
 	tar xvzf tcl$TCLVER-src.tar.gz
 	tar xvzf tk$TCLVER-src.tar.gz
 	cd tcl$TCLVER/unix
@@ -162,7 +168,7 @@ fi
 # Python
 if [ ! -f $SROOT/bin/python ]; then
 	cd $1
-	$FETCH http://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz
+	FETCH http://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz
 	tar xvzf Python-$PYVER.tgz
 	cd Python-$PYVER
 	./configure --prefix=$SROOT --enable-shared
@@ -175,7 +181,7 @@ if python -c 'import setuptools'; then
 	true
 else
 	cd $1
-	$FETCH https://pypi.python.org/packages/84/24/610d8bb87219ed6d0928018b7b35ac6f6f6ef27a71ed6a2d0cfb68200f65/setuptools-$PYSETUPTOOLSVER.tar.gz
+	FETCH https://pypi.python.org/packages/84/24/610d8bb87219ed6d0928018b7b35ac6f6f6ef27a71ed6a2d0cfb68200f65/setuptools-$PYSETUPTOOLSVER.tar.gz
 	tar xvzf setuptools-$PYSETUPTOOLSVER.tar.gz
 	cd setuptools-$PYSETUPTOOLSVER
 	python setup.py build
@@ -185,7 +191,7 @@ fi
 # Pip
 if [ ! -f $SROOT/bin/pip ]; then
 	cd $1
-	$FETCH http://pypi.python.org/packages/e7/a8/7556133689add8d1a54c0b14aeff0acb03c64707ce100ecd53934da1aa13/pip-$PIPVER.tar.gz
+	FETCH http://pypi.python.org/packages/e7/a8/7556133689add8d1a54c0b14aeff0acb03c64707ce100ecd53934da1aa13/pip-$PIPVER.tar.gz
 	tar xvzf pip-$PIPVER.tar.gz
 	cd pip-$PIPVER
 	python setup.py build
@@ -196,7 +202,7 @@ fi
 if [ ! -f $SROOT/lib/libboost_python.so ]; then
 	cd $1
 	tarball=boost_`echo $BOOSTVER | tr . _`
-	$FETCH http://liquidtelecom.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
+	FETCH http://liquidtelecom.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
 	tar xvjf $tarball.tar.bz2
 	cd $tarball
 	./bootstrap.sh --prefix=$SROOT --with-python=$SROOT/bin/python --with-python-root=$SROOT
@@ -207,7 +213,7 @@ fi
 # CMake
 if [ ! -f $SROOT/bin/cmake ]; then
 	cd $1
-	$FETCH http://cmake.org/files/v$(echo $CMAKEVER | cut -f 1,2 -d .)/cmake-$CMAKEVER.tar.gz
+	FETCH http://cmake.org/files/v$(echo $CMAKEVER | cut -f 1,2 -d .)/cmake-$CMAKEVER.tar.gz
 	tar xvzf cmake-$CMAKEVER.tar.gz
 	cd cmake-$CMAKEVER
 	./configure --prefix=$SROOT
@@ -217,7 +223,7 @@ fi
 # OpenBLAS
 if [ ! -f $SROOT/lib/libopenblas.so ]; then
 	cd $1
-	$FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
+	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
 	tar xvzf v$OPENBLASVER.tar.gz
 	cd OpenBLAS-$OPENBLASVER
 	make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
@@ -227,7 +233,7 @@ fi
 # Freetype (needed for matplotlib, not always installed)
 if [ ! -f $SROOT/lib/libfreetype.so ]; then
 	cd $1
-	$FETCH http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPEVER.tar.bz2
+	FETCH http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPEVER.tar.bz2
 	tar xvjf freetype-$FREETYPEVER.tar.bz2
 	cd freetype-$FREETYPEVER
 	./configure --prefix=$SROOT
@@ -238,7 +244,7 @@ fi
 # Gnuplot
 if [ ! -f $SROOT/bin/gnuplot ]; then
 	cd $1
-	$FETCH http://liquidtelecom.dl.sourceforge.net/project/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
+	FETCH http://liquidtelecom.dl.sourceforge.net/project/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
 	tar xvzf gnuplot-$GNUPLOTVER.tar.gz
 	cd gnuplot-$GNUPLOTVER
 	./configure --prefix=$SROOT --without-linux-vga --without-lisp-files --with-bitmap-terminals
@@ -251,7 +257,7 @@ fi
 # CFITSIO
 if [ ! -f $SROOT/lib/libcfitsio.so ]; then
 	cd $1
-	$FETCH http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
+	FETCH http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
 	tar xvzf cfitsio$(echo $CFITSIOVER | tr -d .).tar.gz
 	cd cfitsio
 	./configure --prefix=$SROOT --enable-bzip2=$SROOT
@@ -263,7 +269,7 @@ fi
 # HDF5
 if [ ! -f $SROOT/bin/h5ls ]; then
 	cd $1
-	$FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
+	FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
 	tar xvjf hdf5-$HDF5VER.tar.bz2
 	cd hdf5-$HDF5VER
 	export HDF5_CC=$SROOT/bin/gcc
@@ -275,7 +281,7 @@ fi
 # NetCDF
 if [ ! -f $SROOT/bin/ncdump ]; then
 	cd $1
-	$FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-$NETCDFVER.tar.gz
+	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-$NETCDFVER.tar.gz
 	tar xvzf netcdf-$NETCDFVER.tar.gz
 	cd netcdf-$NETCDFVER
 	./configure --prefix=$SROOT
@@ -292,7 +298,7 @@ export LAPACK=$SROOT/lib/libopenblas.so
 # FFTW
 if [ ! -f $SROOT/lib/libfftw3l.so ]; then
 	cd $1
-	$FETCH http://www.fftw.org/fftw-$FFTWVER.tar.gz
+	FETCH http://www.fftw.org/fftw-$FFTWVER.tar.gz
 	tar xvzf fftw-$FFTWVER.tar.gz
 	cd fftw-$FFTWVER
 	CC="cc -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-float --enable-threads
@@ -319,7 +325,7 @@ fi
 # FLAC
 if [ ! -f $SROOT/bin/flac ]; then
 	cd $1
-	$FETCH http://downloads.xiph.org/releases/flac/flac-$FLACVER.tar.xz
+	FETCH http://downloads.xiph.org/releases/flac/flac-$FLACVER.tar.xz
 	rm -f flac-$FLACVER.tar
 	xz -d flac-$FLACVER.tar.xz
 	tar xvf flac-$FLACVER.tar
@@ -332,7 +338,7 @@ fi
 # GSL
 if [ ! -f $SROOT/lib/libgsl.so ]; then
 	cd $1
-	$FETCH ftp://ftp.gnu.org/gnu/gsl/gsl-$GSLVER.tar.gz
+	FETCH ftp://ftp.gnu.org/gnu/gsl/gsl-$GSLVER.tar.gz
 	tar xvzf gsl-$GSLVER.tar.gz
 	cd gsl-$GSLVER
 	./configure --prefix=$SROOT
@@ -358,7 +364,7 @@ done
 # Globus
 if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
 	cd $1
-	$FETCH http://www.globus.org/ftppub/gt5/`echo $GLOBUSVER | cut -f 1,2 -d .`/$GLOBUSVER/installers/src/gt$GLOBUSVER-all-source-installer.tar.gz
+	FETCH http://www.globus.org/ftppub/gt5/`echo $GLOBUSVER | cut -f 1,2 -d .`/$GLOBUSVER/installers/src/gt$GLOBUSVER-all-source-installer.tar.gz
 	tar xvzf gt$GLOBUSVER-all-source-installer.tar.gz
 	cd gt$GLOBUSVER-all-source-installer
 	./configure --prefix=$SROOT
