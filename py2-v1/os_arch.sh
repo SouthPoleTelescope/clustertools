@@ -3,7 +3,7 @@
 # .bash_profile
 
 if [ -x /usr/bin/lsb_release ]; then
-	DISTRIB=`lsb_release -si`
+	DISTRIB=`lsb_release -si | tr ' ' '_'`
 	VERSION=`lsb_release -sr`
 	CPU=`uname -m`
 else
