@@ -223,8 +223,8 @@ fi
 # OpenBLAS
 if [ ! -f $SROOT/lib/libopenblas.so ]; then
 	cd $1
-	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
-	tar xvzf v$OPENBLASVER.tar.gz
+	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER
+	tar xvzf v$OPENBLASVER
 	cd OpenBLAS-$OPENBLASVER
 	make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
@@ -301,7 +301,7 @@ if [ ! -f $SROOT/lib/libfftw3l.so ]; then
 	FETCH http://www.fftw.org/fftw-$FFTWVER.tar.gz
 	tar xvzf fftw-$FFTWVER.tar.gz
 	cd fftw-$FFTWVER
-	CC="cc -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-float --enable-threads
+	CC="$CC -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-float --enable-threads
 	make
 	make install
 
@@ -309,7 +309,7 @@ if [ ! -f $SROOT/lib/libfftw3l.so ]; then
 	rm -rf fftw-$FFTWVER
 	tar xvzf fftw-$FFTWVER.tar.gz
 	cd fftw-$FFTWVER
-	CC="cc -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-long-double --enable-threads
+	CC="$CC -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-long-double --enable-threads
 	make
 	make install
 
@@ -317,7 +317,7 @@ if [ ! -f $SROOT/lib/libfftw3l.so ]; then
 	rm -rf fftw-$FFTWVER
 	tar xvzf fftw-$FFTWVER.tar.gz
 	cd fftw-$FFTWVER
-	CC="cc -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-threads
+	CC="$CC -mtune=generic" ./configure --prefix=$SROOT --enable-shared --enable-threads
 	make
 	make install
 fi
