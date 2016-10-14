@@ -94,7 +94,7 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	FETCH http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILSVER.tar.gz
 	tar xvzf binutils-$BINUTILSVER.tar.gz
 	cd binutils-$BINUTILSVER
-	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
+	./configure --prefix=$SROOT --disable-gprof --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
 	make $JFLAG; make install
 
 	cd $1
@@ -103,7 +103,11 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	cd gcc-$GCCVER
 	# Subshell here prevents some kind of space madness on RHEL6
 	(LD=`which ld` AS=`which as` LD_FOR_TARGET=`which ld` ./configure --prefix=$SROOT --with-gmp=$SROOT --disable-multilib --enable-languages=c,c++,fortran)
-	make $JFLAG; make install
+	if [ "`uname -s`" = FreeBSD ]; then
+		gmake $JFLAG; gmake install
+	else
+		make $JFLAG; make install
+	fi
 
 	export CC=$SROOT/bin/gcc
 	export CXX=$SROOT/bin/g++
@@ -241,8 +245,13 @@ if [ ! -f $SROOT/lib/libopenblas.so ]; then
 	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER
 	tar xvzf v$OPENBLASVER
 	cd OpenBLAS-$OPENBLASVER
-	make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
-	make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+	if [ "`uname -s`" = FreeBSD ]; then
+		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+		gmake install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+	else
+		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+		make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+	fi
 fi
 
 # Freetype (needed for matplotlib, not always installed)
