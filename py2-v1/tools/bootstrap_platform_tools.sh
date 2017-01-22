@@ -17,6 +17,7 @@ PIPVER=8.1.2
 BOOSTVER=1.57.0
 HDF5VER=1.8.17
 NETCDFVER=4.4.0
+NETCDFCXXVER=4.3.0
 FFTWVER=3.3.4
 GSLVER=2.1
 
@@ -31,7 +32,7 @@ FREETYPEVER=2.6.3
 CFITSIOVER=3.390
 OPENBLASVER=0.2.18
 
-PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5.0.0 jupyter==1.0.0 pyfits==3.0.7 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.3.1 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0 pandas==0.19.2 line_profiler==2.0 memory_profiler==0.43"
+PYTHON_PKGS_TO_INSTALL="numpy==1.11.1 scipy==0.16.1 readline==6.2.4.1 ipython==5.0.0 jupyter==1.0.0 pyfits==3.0.7 astropy==1.1.2 numexpr==2.5.2 Cython==0.24 matplotlib==1.5.0 Sphinx==1.4.1 tables==3.2.3.1 urwid==1.3.1 pyFFTW==0.10.1 healpy==1.9.1 spectrum==0.6.1 tornado==4.3 SQLAlchemy==1.0.13 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.0 pyzmq==15.2.0 jsonschema==2.5.1 h5py==2.6.0 pandas==0.19.2 line_profiler==2.0 memory_profiler==0.43 simplejson==3.10.0"
 
 # Extra things for grid tools
 #GLOBUSVER=5.2.4
@@ -293,6 +294,16 @@ if [ ! -f $SROOT/bin/ncdump ]; then
 	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-$NETCDFVER.tar.gz
 	tar xvzf netcdf-$NETCDFVER.tar.gz
 	cd netcdf-$NETCDFVER
+	./configure --prefix=$SROOT
+	make $JFLAG
+	make install
+fi
+
+if [ ! -f $SROOT/lib/libnetcdf_c++4.so ]; then
+	cd $1
+	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-cxx4-$NETCDFCXXVER.tar.gz
+	tar xvzf netcdf-cxx4-$NETCDFCXXVER.tar.gz
+	cd netcdf-cxx4-$NETCDFCXXVER
 	./configure --prefix=$SROOT
 	make $JFLAG
 	make install
