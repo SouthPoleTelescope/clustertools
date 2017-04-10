@@ -14,7 +14,7 @@ fi
 
 # Map binary compatible operating systems and versions onto one another
 case $DISTRIB in
-	"RedHatEnterpriseClient" | "RedHatEnterpriseServer" | "ScientificSL" | "Scientific" | "CentOS")
+	"RedHatEnterpriseClient" | "RedHatEnterpriseServer" | "ScientificSL" | "Scientific" | "ScientificFermi" | "CentOS")
 		DISTRIB="RHEL"
 		VERSION=`lsb_release -sr | cut -d '.' -f 1`
 		;;
