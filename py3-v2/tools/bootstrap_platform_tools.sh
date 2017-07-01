@@ -32,7 +32,7 @@ FREETYPEVER=2.6.3
 CFITSIOVER=3.390
 OPENBLASVER=0.2.19
 
-PYTHON_PKGS_TO_INSTALL="numpy==1.13.0 scipy==0.19.1 ipython==6.1.0 jupyter==1.0.0 pyfits==3.4 astropy==2.0rc1 numexpr==2.6.2 Cython==0.25.2 matplotlib==2.0.2 Sphinx==1.6.2 tables==3.4.2 urwid==1.3.1 pyFFTW==0.10.4 healpy==1.10.3 spectrum==0.6.1 tornado==4.5.1 SQLAlchemy==1.1.11 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.3 jsonschema==2.5.1 h5py==2.6.0 pandas==0.20.2 line_profiler==2.0 memory_profiler==0.43 simplejson==3.10.0 joblib==0.11"
+PYTHON_PKGS_TO_INSTALL="numpy==1.13.0 scipy==0.19.1 ipython==6.1.0 jupyter==1.0.0 pyfits==3.4 astropy==2.0rc1 numexpr==2.6.2 Cython==0.25.2 matplotlib==2.0.2 Sphinx==1.6.2 tables==3.4.2 urwid==1.3.1 pyFFTW==0.10.4 healpy==1.10.3 spectrum==0.6.1 tornado==4.5.1 SQLAlchemy==1.1.11 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.3 jsonschema==2.6.0 h5py==2.6.0 pandas==0.20.2 line_profiler==2.0 memory_profiler==0.43 simplejson==3.10.0 joblib==0.11 lmfit==0.9.7"
 
 # Extra things for grid tools
 #GLOBUSVER=5.2.4
