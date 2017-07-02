@@ -35,8 +35,7 @@ OPENBLASVER=0.2.19
 PYTHON_PKGS_TO_INSTALL="numpy==1.13.0 scipy==0.19.1 ipython==6.1.0 jupyter==1.0.0 pyfits==3.4 astropy==2.0rc1 numexpr==2.6.2 Cython==0.25.2 matplotlib==2.0.2 Sphinx==1.6.2 tables==3.4.2 urwid==1.3.1 pyFFTW==0.10.4 healpy==1.10.3 spectrum==0.6.1 tornado==4.5.1 SQLAlchemy==1.1.11 PyYAML==3.11 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.10.3 jsonschema==2.6.0 h5py==2.6.0 pandas==0.20.2 line_profiler==2.0 memory_profiler==0.43 simplejson==3.10.0 joblib==0.11 lmfit==0.9.7"
 
 # Extra things for grid tools
-#GLOBUSVER=5.2.4
-#PYTHON_PKGS_TO_INSTALL="$PYTHON_PKGS_TO_INSTALL pyOpenSSL==0.13 pyasn1==0.1.7 jsonrpclib==0.1.3 configobj==4.7.2 coverage==3.6 flexmock==0.9.7 pyuv==0.10.4"
+GLOBUSVER=6.0.1493989444
 
 # ----------------- Installation---------------------
 
@@ -400,11 +399,11 @@ done
 # Globus
 if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
 	cd $1
-	FETCH http://www.globus.org/ftppub/gt5/`echo $GLOBUSVER | cut -f 1,2 -d .`/$GLOBUSVER/installers/src/gt$GLOBUSVER-all-source-installer.tar.gz
-	tar xvzf gt$GLOBUSVER-all-source-installer.tar.gz
-	cd gt$GLOBUSVER-all-source-installer
-	./configure --prefix=$SROOT
-	make gpt globus-data-management-client
+	FETCH http://downloads.globus.org/toolkit/gt6/stable/installers/src/globus_toolkit-$GLOBUSVER.tar.gz
+	tar xvzf globus_toolkit-$GLOBUSVER.tar.gz
+	cd globus_toolkit-$GLOBUSVER
+	./configure --prefix=$SROOT --enable-myproxy --disable-gsi-openssh --disable-gram5 --enable-shared=no
+	make 
 	make install
 fi
 
