@@ -22,6 +22,7 @@ FFTWVER=3.3.6-pl2
 GSLVER=2.4
 
 GNUPLOTVER=5.0.6
+PGPLOTVER=5.2.2
 TCLVER=8.6.5
 BZIPVER=1.0.6
 ZLIBVER=1.2.8 # NB: built conditionally
@@ -277,6 +278,25 @@ if [ ! -f $SROOT/bin/gnuplot ]; then
 	# Fix brokenness in build system with hard dependencies on optional files
 	touch docs/gnuplot-eldoc.el docs/gnuplot-eldoc.elc
 	make install
+fi
+
+# PGPLOT
+if [ ! -f $SROOT/lib/libcpgplot.so ]; then
+	# fetch
+	cd $1
+	FETCH ftp://ftp.astro.caltech.edu/pub/pgplot/pgplot$(echo $PGPLOTVER | cut -f 1,2 -d .).tar.gz
+	tar xvzf pgplot$(echo $PGPLOTVER | cut -f 1,2 -d .).tar.gz
+	patch -p0 < $SROOTBASE/tools/pgplot$PGPLOTVER.patch
+	cd pgplot
+	mkdir build
+	cd build
+	cp ../drivers.list .
+	../makemake .. linux clustertools
+	make
+	make cpg
+	install lib* $SROOT/lib
+	install *.h $SROOT/include
+	install grfont.dat rgb.txt $SROOT/share/pgplot
 fi
 
 # CFITSIO
