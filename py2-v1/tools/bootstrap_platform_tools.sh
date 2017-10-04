@@ -279,8 +279,10 @@ if [ ! -f $SROOT/lib/libcpgplot.so ]; then
 	../makemake .. linux clustertools
 	make
 	make cpg
+	install pgxwin_server $SROOT/bin
 	install lib* $SROOT/lib
 	install *.h $SROOT/include
+	mkdir -p $SROOT/share/pgplot
 	install grfont.dat rgb.txt $SROOT/share/pgplot
 fi
 
