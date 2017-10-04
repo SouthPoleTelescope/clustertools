@@ -1,6 +1,6 @@
 diff -Naur pgplot/drivers.list pgplot_clustertools/drivers.list
---- pgplot/drivers.list	2017-10-03 15:32:39.237420545 -0500
-+++ pgplot_clustertools/drivers.list	2017-10-03 15:38:52.732596755 -0500
+--- pgplot/drivers.list	1999-05-04 00:02:15.000000000 -0500
++++ pgplot_clustertools/drivers.list	2017-10-03 15:38:52.000000000 -0500
 @@ -37,14 +37,14 @@
  ! NEDRIV 0 /NEXT      Computers running NeXTstep operating system
    NUDRIV 0 /NULL      Null device (no output)				Std F77
@@ -43,8 +43,8 @@ diff -Naur pgplot/drivers.list pgplot_clustertools/drivers.list
  ! The following driver is included solely for use by the aips++ team.
  !
 diff -Naur pgplot/makemake pgplot_clustertools/makemake
---- pgplot/makemake	2017-10-03 15:32:39.180418378 -0500
-+++ pgplot_clustertools/makemake	2017-10-04 10:20:10.513565489 -0500
+--- pgplot/makemake	1999-05-04 17:35:43.000000000 -0500
++++ pgplot_clustertools/makemake	2017-10-04 10:20:10.000000000 -0500
 @@ -1025,12 +1025,12 @@
  grivas.o : $(DRVDIR)/gadef.h
  grtv00.o : $(DRVDIR)/imdef.h
@@ -75,8 +75,8 @@ diff -Naur pgplot/makemake pgplot_clustertools/makemake
  	$(CCOMPL) $(CFLAGD) -c -I. $(SRC)/cpg/cpgdemo.c
  	$(FCOMPL) -o cpgdemo cpgdemo.o $(CPGPLOT_LIB) $(LIBS)
 diff -Naur pgplot/src/grpckg1.inc pgplot_clustertools/src/grpckg1.inc
---- pgplot/src/grpckg1.inc	2017-10-03 15:32:34.235231390 -0500
-+++ pgplot_clustertools/src/grpckg1.inc	2017-10-03 15:33:57.633396759 -0500
+--- pgplot/src/grpckg1.inc	1997-04-30 16:16:57.000000000 -0500
++++ pgplot_clustertools/src/grpckg1.inc	2017-10-03 15:33:57.000000000 -0500
 @@ -26,7 +26,7 @@
  C
        INTEGER   GRIMAX, GRFNMX
@@ -87,8 +87,8 @@ diff -Naur pgplot/src/grpckg1.inc pgplot_clustertools/src/grpckg1.inc
        PARAMETER (GRCXSZ =  7.0, GRCYSZ =  9.0)
  C
 diff -Naur pgplot/src/pgplot.inc pgplot_clustertools/src/pgplot.inc
---- pgplot/src/pgplot.inc	2017-10-03 15:32:34.955258761 -0500
-+++ pgplot_clustertools/src/pgplot.inc	2017-10-03 15:34:05.166682133 -0500
+--- pgplot/src/pgplot.inc	1997-02-26 16:11:45.000000000 -0600
++++ pgplot_clustertools/src/pgplot.inc	2017-10-03 15:34:05.000000000 -0500
 @@ -4,7 +4,7 @@
  C Maximum number of concurrent devices (should match GRIMAX).
  C-----------------------------------------------------------------------
@@ -100,7 +100,7 @@ diff -Naur pgplot/src/pgplot.inc pgplot_clustertools/src/pgplot.inc
  C-----------------------------------------------------------------------
 diff -Naur pgplot/sys_linux/clustertools.conf pgplot_clustertools/sys_linux/clustertools.conf
 --- pgplot/sys_linux/clustertools.conf	1969-12-31 18:00:00.000000000 -0600
-+++ pgplot_clustertools/sys_linux/clustertools.conf	2017-10-03 16:18:48.691537878 -0500
++++ pgplot_clustertools/sys_linux/clustertools.conf	2017-10-04 11:30:05.401649003 -0500
 @@ -0,0 +1,143 @@
 +# The GNU g77 FORTRAN compiler and Gnu gcc C compiler on an elf-system.
 +#-----------------------------------------------------------------------
@@ -161,7 +161,7 @@ diff -Naur pgplot/sys_linux/clustertools.conf pgplot_clustertools/sys_linux/clus
 +# Mandatory.
 +# The C compiler flags to use when compiling the pgplot library.
 + 
-+   CFLAGC="-Wall -fPIC -DPG_PPU -O"
++   CFLAGC="-Wall -fPIC -DPG_PPU -O -DUSE_INTERP_RESULT"
 +
 +# Mandatory.
 +# The C compiler flags to use when compiling C demo programs.
@@ -196,7 +196,7 @@ diff -Naur pgplot/sys_linux/clustertools.conf pgplot_clustertools/sys_linux/clus
 +# The library-specification flags to use when linking Tk demo programs.
 +# Note that you may need to append version numbers to -ltk and -ltcl.
 + 
-+   TK_LIBS="-L$SROOT/lib -ltk -ltcl $LIBS -ldl"
++   TK_LIBS="-L$SROOT/lib -ltk8.6 -ltcl8.6 -lpthread $LIBS -ldl"
 +
 +# Mandatory.
 +# On systems that have a ranlib utility, put "ranlib" here. On other
@@ -244,4 +244,349 @@ diff -Naur pgplot/sys_linux/clustertools.conf pgplot_clustertools/sys_linux/clus
 +# place the modified files in it and change the following line to
 +# $SYSDIR="$SYSDIR/subdirectory_name".
 + 
-+   SYSDIR="$SYSDIR"
++   SYSDIR="$SYSDIR/clustertools_src"
+diff -Naur pgplot/sys_linux/clustertools_src/grfileio.c pgplot_clustertools/sys_linux/clustertools_src/grfileio.c
+--- pgplot/sys_linux/clustertools_src/grfileio.c	1969-12-31 18:00:00.000000000 -0600
++++ pgplot_clustertools/sys_linux/clustertools_src/grfileio.c	2017-10-04 11:18:00.375982410 -0500
+@@ -0,0 +1,189 @@
++/*GRFILEIO -- Fast low-level UNIX I/O routines
++ * +
++ *
++ * GRFILEIO is a set of functions that makes fast, low-level Unix I/O routines
++ * available to a Fortran program.
++ *
++ *-------
++ * 2-Dec-92 - fastio.c: John L. Lillibridge, NOAA/NOS/OES Geosciences Lab
++ * 11-Nov-93 - Addition of seekf and warning by Remko Scharroo, DUT/SSR&T
++ * 17-May-94 - Nice manual
++ * 13-Oct-94 - Bits not required by PGPLOT stripped out; routine names
++ *            changed [TJP].
++ * 09-Nov-94 - Tidied and ported to Cray [mcs] (untested).
++ * 10-Nov-94 - Added GRFCH() routine to write FORTRAN CHARACTER sub-strings.
++ * 19-Jun-95 - File name "-" means stdout.
++ *-------
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <string.h>
++
++#ifdef PG_PPU
++#define GROFIL grofil_
++#define GRWFIL grwfil_
++#define GRCFIL grcfil_
++#define GRWFCH grwfch_
++#else
++#define GROFIL grofil
++#define GRWFIL grwfil
++#define GRCFIL grcfil
++#define GRWFCH grwfch
++#endif
++
++/*
++ **&GROFIL -- Open file for writing with GRFILEIO
++ *+
++ *     FUNCTION GROFIL (FNAME)
++ *     INTEGER GROFIL
++ *     CHARACTER*(*) FNAME
++ *
++ * Opens file FNAME for writing.
++ * GROFIL returns the file descriptor for use in subsequent calls to
++ * grwfil or grcfil. If GROFIL is negative, an error occurred while
++ * opening the file.
++ *
++ **
++ * Usage:
++ *
++ *     FD = GROFIL ('output_file')
++ *     CALL GRWFIL (FD, 4, ARRAY)
++ *
++ * Arguments:
++ *  FNAME  (input) : File name of the input or output file
++ *  GROFIL (output) : Contains the file descriptor on return. If GROFIL < 0
++ *                   an error occurred while opening the file.
++ *-
++ */
++int GROFIL(fname, fname_len)
++     char *fname;
++     int fname_len;
++{
++  char *name = fname;      /* C pointer to FORTRAN string */
++  int   slen = fname_len;  /* Length of the FORTRAN string */
++  char *buff=0;            /* Dynamically allocated copy of name[] */
++  int fd = -1;             /* File descriptor to be returned */
++/*
++ * Determine how long the FORTRAN string is by searching for the last
++ * non-blank character in the string.
++ */
++  while(slen>0 && name[slen-1]==' ')
++    slen--;
++/*
++ * Dynamically allocate a buffer to copy the FORTRAN string into.
++ */
++  buff = (char *) malloc((slen+1) * sizeof(char));
++  if(buff) {
++/*
++ * Make a C string copy of the FORTRAN string.
++ */
++    strncpy(buff, name, slen);
++    buff[slen] = '\0';
++/* 
++ * Check for stdout.
++ */
++    if (slen == 1 && buff[0] == '-') {
++      fd = 1;
++    } else {
++/*
++ * Open the file and return its descriptor.
++ */
++      fd = open(buff, O_WRONLY | O_CREAT | O_TRUNC, 0666);
++    }
++    free(buff);
++  } else {
++    fprintf(stderr, "grofil: Insufficient memory\n");
++  };
++  return fd;
++}
++
++/*
++ **&GRCFIL -- Close file from GRFILEIO access
++ *+
++ *     FUNCTION GRCFIL (FD)
++ *     INTEGER GRCFIL (FD)
++ *
++ * Closes the file with descriptor FD from GRFILEIO access. GRCFIL returns
++ * 0 when properly closed. Otherwise, use PERRORF to report the error.
++ * 
++ * Usage:
++ *      IOS = GRCFIL (FD)
++ * or:
++ *      CALL GRCFIL (FD)
++ *
++ * In the last case the return code is ignored.
++ *
++ * Arguments:
++ *  FD      (input) : File descriptor returned by GROFIL.
++ *  GRCFIL (output) : Error code or 0 on proper closing.
++ *-
++ */
++int GRCFIL(fd)
++     int *fd;
++{
++  if ((*fd) == 1) {
++    return 0;
++  } else{
++    return close(*fd);
++  }
++}
++
++/*
++ **&GRWFIL -- GRFILEIO write routine
++ *+
++ *     FUNCTION GRWFIL (FD, NBYTE, BUFFER)
++ *     INTEGER FD, NBYTE, GRWFIL
++ *     BYTE    BUFFER(NBYTE)
++ *
++ * Writes NBYTE bytes into the file associated by descriptor FD (which is
++ * returned by the GROFIL call. The array BUFFER contains the data that has
++ * to be written, but can (of course) also be associated with any other
++ * string, scalar, or n-dimensional array.
++ * The function returns the number of bytes actually written in GRWFIL. If
++ * GRWFIL < 0, a write error occurred.
++ *
++ * Arguments:
++ *  FD      (input) : File descriptor returned by GROFIL
++ *  NBYTE   (input) : Number of bytes to be written
++ *  BUFFER  (input) : Buffer containing the bytes that have to be written
++ *  GRWFIL (output) : Number of bytes written, or (if negative) error code.
++ *-
++ */
++int GRWFIL(fd, nbytes, buf)
++     int *fd, *nbytes;
++     char *buf;
++{
++  return write(*fd, (void *) buf, *nbytes);
++}
++
++/*
++ **&GRWFCH -- GRFILEIO write FORTRAN character STRING routine
++ *+
++ *     FUNCTION GRWFCH (FD, STRING)
++ *     INTEGER FD, GRWFCH
++ *     CHARACTER*(*) STRING
++ *
++ * Writes NBYTE bytes into the file associated by descriptor FD (which is
++ * returned by the GROFIL call). The string STRING contains the data that has
++ * to be written.
++ * The function returns the number of bytes actually written in GRWFCH. If
++ * GRWFCH < 0, a write error occurred.
++ *
++ * Arguments:
++ *  FD      (input) : File descriptor returned by GROFIL
++ *  STRING  (input) : String containing the characterst to be written
++ *  GRWFCH (output) : Number of bytes written, or (if negative) error code.
++ *-
++ */
++int GRWFCH(fd, buf, buf_len)
++     int *fd;
++     char *buf;
++     int buf_len;
++{
++  return write(*fd, (void *) buf, buf_len);
++}
+diff -Naur pgplot/sys_linux/clustertools_src/grtermio.c pgplot_clustertools/sys_linux/clustertools_src/grtermio.c
+--- pgplot/sys_linux/clustertools_src/grtermio.c	1969-12-31 18:00:00.000000000 -0600
++++ pgplot_clustertools/sys_linux/clustertools_src/grtermio.c	2017-10-04 11:18:07.400930740 -0500
+@@ -0,0 +1,148 @@
++#ifndef _POSIX_SOURCE
++#define _POSIX_SOURCE
++#endif
++
++/* Support routines for terminal I/O. This module defines the following
++   Fortran-callable routines: GROTER, GRCTER, GRWTER, GRPTER. */
++
++#include <stdio.h>
++#include <termios.h>
++#include <string.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++
++#ifdef PG_PPU
++#define GROTER groter_
++#define GRWTER grwter_
++#define GRCTER grcter_
++#define GRPTER grpter_
++#else
++#define GROTER groter
++#define GRWTER grwter
++#define GRCTER grcter
++#define GRPTER grpter
++#endif
++
++/* Open a channel to the device specified by 'cdev'.
++ *
++ * cdev      I    The name of the device to be opened
++ * ldev      I    Number of valid characters in cdev
++ * groter    O    The open channel number (-1 indicates an error)
++ */
++int GROTER(cdev, ldev, cdev_len)
++     char *cdev; int *ldev;
++     int cdev_len;
++{
++  int fd;        /* The returned file descriptor */
++  char name[64]; /* A copy of the given terminal device name */
++/*
++ * Make a copy of the given file if there is sufficient room in name[].
++ */
++  if(*ldev <= sizeof(name)-1) {
++    strncpy(name, cdev, *ldev);
++    name[*ldev] = '\0';
++  } else {
++    fprintf(stderr, "groter: Terminal file name too long.\n");
++    return -1;
++  };
++/*
++ * Open the terminal.
++ */
++  if((fd = open(name, 2)) == -1) {
++    perror(name);
++    return -1;
++  };
++  return fd;
++}
++
++
++/* Close a previously opened channel.
++ *
++ * fd        I    The channel number to be closed
++ */
++void GRCTER(fd)
++     int *fd;
++{
++  close(*fd);
++  return;
++}
++
++/* Write lbuf bytes from cbuf to the channel fd.  Data is written without
++ * any formating.
++ *
++ * fd        I    The channel number
++ * cbuf      I    Character array of data to be written
++ * lbuf      I/O  The number of bytes to write, set to zero on return
++ */
++void GRWTER(fd, cbuf, lbuf, cbuf_len)
++     int *fd; char *cbuf; int *lbuf; int cbuf_len;
++{
++   int nwritten = write (*fd, cbuf, *lbuf);
++   if (nwritten != *lbuf)
++     perror("Error writing to graphics device");
++   *lbuf = 0;
++   return;
++}
++
++/* Write prompt string on terminal and then read response.  This version
++ * will try to read lbuf characters.
++ *
++ * fd        I    The channel number
++ * cprom     I    An optional prompt string
++ * lprom     I    Number of valid characters in cprom
++ * cbuf      O    Character array of data read
++ * lbuf    I/O    The number of bytes to read, on return number read
++ */
++void GRPTER(fd, cprom, lprom, cbuf, lbuf, cprom_len, cbuf_len)
++     int *fd; char *cprom; int *lprom; char *cbuf; int *lbuf;
++     int cprom_len; int cbuf_len;
++{
++  char *buff = cbuf;   /* C pointer to FORTRAN string */
++  int ndone=0;         /* The number of characters read */
++  struct termios term; /* Terminal mode flags */
++/*
++ * Get the current set of terminal mode flags.
++ */
++   if(tcgetattr(*fd, &term)==0) {
++     struct termios saveterm; /* Saved terminal attributes */
++     int ntry;  /* The number of characters still to be read */
++     int nread; /* The number of characters read in one iteration */
++/*
++ * Save the existing terminal mode flags to be restored later.
++ */
++     saveterm = term;
++/*
++ * Enable raw single character input.
++ */
++     term.c_lflag &= ~ICANON;
++     term.c_cc[VMIN] = 1;
++/*
++ * Install the new terminal flags after first waiting for all pending
++ * output to be delivered to the terminal and after discarding any
++ * lingering input.
++ */
++     tcsetattr(*fd, TCSAFLUSH, &term);
++/*
++ * Prompt for input.
++ */
++     if(*lprom>0) write(*fd, cprom, *lprom);
++/*
++ * Read up to 'ntry' characters from the terminal.
++ */
++     ndone = 0;
++     ntry = *lbuf;
++     do {
++       nread = read(*fd, &buff[ndone], ntry);
++       ndone += nread;
++       ntry  -= nread;
++     } while(nread>0 && ntry>0);
++/*
++ * Restore the previous terminal mode flags.
++ */
++     tcsetattr(*fd, TCSAFLUSH, &saveterm);
++   };
++   *lbuf=ndone;
++   return;
++}
