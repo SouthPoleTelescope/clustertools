@@ -44,8 +44,14 @@ diff -Naur pgplot/drivers.list pgplot_clustertools/drivers.list
  !
 diff -Naur pgplot/makemake pgplot_clustertools/makemake
 --- pgplot/makemake	2017-10-03 15:32:39.180418378 -0500
-+++ pgplot_clustertools/makemake	2017-10-03 15:48:08.657696008 -0500
-@@ -1030,7 +1030,7 @@
++++ pgplot_clustertools/makemake	2017-10-04 10:20:10.513565489 -0500
+@@ -1025,12 +1025,12 @@
+ grivas.o : $(DRVDIR)/gadef.h
+ grtv00.o : $(DRVDIR)/imdef.h
+ pgxwin.o : $(DRVDIR)/pgxwin.h
+-pndriv.o : ./png.h ./pngconf.h ./zlib.h ./zconf.h
++# pndriv.o : ./png.h ./pngconf.h ./zlib.h ./zconf.h
+ 
  x2driv.o figdisp_comm.o: $(DRVDIR)/commands.h
  
  
