@@ -59,7 +59,7 @@ if [ -z ${OpenCL} ]; then
 fi
 
 # PGPLOT
-if [ -f $SROOT/share/grfont.dat ]; then
+if [ -f $SROOT/share/pgplot/grfont.dat ]; then
     PGPLOT_DIR=${SROOT}/share/pgplot
     PGPLOT_DEV=/xwin
 fi
