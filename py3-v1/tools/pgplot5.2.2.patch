@@ -1,6 +1,18 @@
+diff -Naur pgplot/drivers/pndriv.c pgplot_clustertools/drivers/pndriv.c
+--- pgplot/drivers/pndriv.c	1999-03-26 20:06:23.000000000 -0600
++++ pgplot_clustertools/drivers/pndriv.c	2017-10-19 07:13:18.385176865 -0500
+@@ -222,7 +222,7 @@
+ 	return;
+   }
+ 
+-  if (setjmp(png_ptr->jmpbuf)) { /* not really sure what I'm doing here... */
++  if (setjmp(png_jmpbuf(png_ptr))) { /* not really sure what I'm doing here... */
+ 	fprintf(stderr,"%s: error in libpng while writing file %s, plotting disabled\n", png_ident, filename);
+ 	png_destroy_write_struct(&png_ptr,&info_ptr);
+ 	dev->error = true;
 diff -Naur pgplot/drivers.list pgplot_clustertools/drivers.list
 --- pgplot/drivers.list	1999-05-04 00:02:15.000000000 -0500
-+++ pgplot_clustertools/drivers.list	2017-10-03 15:38:52.000000000 -0500
++++ pgplot_clustertools/drivers.list	2017-10-13 16:20:38.239473833 -0500
 @@ -37,14 +37,14 @@
  ! NEDRIV 0 /NEXT      Computers running NeXTstep operating system
    NUDRIV 0 /NULL      Null device (no output)				Std F77
@@ -91,7 +103,7 @@ diff -Naur pgplot/src/pgplot.inc pgplot_clustertools/src/pgplot.inc
  C-----------------------------------------------------------------------
 diff -Naur pgplot/sys_linux/clustertools.conf pgplot_clustertools/sys_linux/clustertools.conf
 --- pgplot/sys_linux/clustertools.conf	1969-12-31 18:00:00.000000000 -0600
-+++ pgplot_clustertools/sys_linux/clustertools.conf	2017-10-04 11:30:05.401649003 -0500
++++ pgplot_clustertools/sys_linux/clustertools.conf	2017-10-04 14:27:01.460396655 -0500
 @@ -0,0 +1,143 @@
 +# The GNU g77 FORTRAN compiler and Gnu gcc C compiler on an elf-system.
 +#-----------------------------------------------------------------------
@@ -152,12 +164,12 @@ diff -Naur pgplot/sys_linux/clustertools.conf pgplot_clustertools/sys_linux/clus
 +# Mandatory.
 +# The C compiler flags to use when compiling the pgplot library.
 + 
-+   CFLAGC="-Wall -fPIC -DPG_PPU -O -DUSE_INTERP_RESULT"
++   CFLAGC="-Wall -Wno-unused-but-set-variable -Wno-incompatible-pointer-types -Wno-deprecated-declarations -fPIC -DPG_PPU -O -DUSE_INTERP_RESULT"
 +
 +# Mandatory.
 +# The C compiler flags to use when compiling C demo programs.
 + 
-+   CFLAGD="-Wall -O"
++   CFLAGD="-Wall -Wno-incompatible-pointer-types -Wno-return-type -O"
 +
 +# Optional: Only needed if the cpgplot library is to be compiled.
 +# The flags to use when running pgbind to create the C pgplot wrapper
