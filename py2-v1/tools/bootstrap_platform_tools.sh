@@ -273,7 +273,6 @@ if [ ! -f $SROOT/lib/libcpgplot.so ]; then
 	tar xvzf pgplot$(echo $PGPLOTVER | cut -f 1,2 -d .).tar.gz
 	patch -p0 < $SROOTBASE/tools/pgplot$PGPLOTVER.patch
 	cd pgplot
-	sed -i "s%/usr/local/pgplot/%$SROOT/share/pgplot/%g" src/grgfil.f
 	mkdir build
 	cd build
 	cp ../drivers.list .
