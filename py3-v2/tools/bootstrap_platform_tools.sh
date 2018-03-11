@@ -78,7 +78,7 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	make $JFLAG; make install
 
 	cd $1
-	FETCH http://www.mpfr.org/mpfr-current/mpfr-$MPFRVER.tar.gz
+	FETCH http://www.mpfr.org/mpfr-$MPFRVER/mpfr-$MPFRVER.tar.gz
 	tar xvzf mpfr-$MPFRVER.tar.gz
 	cd mpfr-$MPFRVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib

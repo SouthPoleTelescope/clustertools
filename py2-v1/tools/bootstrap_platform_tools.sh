@@ -79,7 +79,7 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	make $JFLAG; make install
 
 	cd $1
-	FETCH http://www.mpfr.org/mpfr-current/mpfr-$MPFRVER.tar.gz
+	FETCH http://www.mpfr.org/mpfr-$MPFRVER/mpfr-$MPFRVER.tar.gz
 	tar xvzf mpfr-$MPFRVER.tar.gz
 	cd mpfr-$MPFRVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
@@ -197,7 +197,7 @@ fi
 # Pip
 if [ ! -f $SROOT/bin/pip ]; then
 	cd $1
-	FETCH http://pypi.python.org/packages/e7/a8/7556133689add8d1a54c0b14aeff0acb03c64707ce100ecd53934da1aa13/pip-$PIPVER.tar.gz
+	FETCH https://pypi.python.org/packages/e7/a8/7556133689add8d1a54c0b14aeff0acb03c64707ce100ecd53934da1aa13/pip-$PIPVER.tar.gz
 	tar xvzf pip-$PIPVER.tar.gz
 	cd pip-$PIPVER
 	python setup.py build
@@ -229,8 +229,8 @@ fi
 # OpenBLAS
 if [ ! -f $SROOT/lib/libopenblas.so ]; then
 	cd $1
-	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER
-	tar xvzf v$OPENBLASVER
+	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
+	tar xvzf v$OPENBLASVER.tar.gz
 	cd OpenBLAS-$OPENBLASVER
 	if [ "`uname -s`" = FreeBSD ]; then
 		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
@@ -301,7 +301,7 @@ fi
 # HDF5
 if [ ! -f $SROOT/bin/h5ls ]; then
 	cd $1
-	FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
+	FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$(echo $HDF5VER | cut -f 1,2 -d .)/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
 	tar xvjf hdf5-$HDF5VER.tar.bz2
 	cd hdf5-$HDF5VER
 	export HDF5_CC=$SROOT/bin/gcc
