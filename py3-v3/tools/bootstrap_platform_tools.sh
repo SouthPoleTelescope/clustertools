@@ -11,7 +11,7 @@ MPCVER=1.1.0
 MPFRVER=4.0.1
 GMPVER=6.1.2
 
-PYVER=3.7.0
+PYVER=3.6.6
 PYSETUPTOOLSVER=39.2.0
 PIPVER=18.0
 BOOSTVER=1.68.0
@@ -21,7 +21,7 @@ NETCDFCXXVER=4.3.0
 FFTWVER=3.3.8
 GSLVER=2.5
 
-GNUPLOTVER=5.2.4
+GNUPLOTVER=5.0.6
 PGPLOTVER=5.2.2
 TCLVER=8.6.8
 BZIPVER=1.0.6
@@ -245,10 +245,10 @@ if [ ! -f $SROOT/lib/libopenblas.so ]; then
 	tar xvzf v$OPENBLASVER.tar.gz
 	cd OpenBLAS-$OPENBLASVER
 	if [ "`uname -s`" = FreeBSD ]; then
-		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs
+		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
 		gmake install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	else
-		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs
+		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
 		make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	fi
 fi
@@ -328,7 +328,7 @@ if [ ! -f $SROOT/bin/ncdump ]; then
 	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-$NETCDFVER.tar.gz
 	tar xvzf netcdf-$NETCDFVER.tar.gz
 	cd netcdf-$NETCDFVER
-	./configure --prefix=$SROOT
+	./configure --prefix=$SROOT --disable-dap
 	make $JFLAG
 	make install
 fi
