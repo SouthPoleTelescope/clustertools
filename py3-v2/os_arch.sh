@@ -18,6 +18,9 @@ case $DISTRIB in
 		DISTRIB="RHEL"
 		VERSION=`lsb_release -sr | cut -d '.' -f 1`
 		;;
+	"SUSE")
+		VERSION=`lsb_release -sr | cut -d '.' -f 1`
+		;;
 	"Ubuntu")
 		VERSION=`lsb_release -sr | cut -d '.' -f 1`
 		;;

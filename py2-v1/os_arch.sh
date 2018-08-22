@@ -21,6 +21,9 @@ case $DISTRIB in
 	"Ubuntu")
 		VERSION=`lsb_release -sr | cut -d '.' -f 1`
 		;;
+	"SUSE")
+		VERSION=`lsb_release -sr | cut -d '.' -f 1`
+		;;
 	"FreeBSD")
 		VERSION=`uname -r | cut -d '.' -f 1`
 		CPU=`uname -p`
