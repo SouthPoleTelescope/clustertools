@@ -11,7 +11,7 @@ MPCVER=1.1.0
 MPFRVER=4.0.1
 GMPVER=6.1.2
 
-PYVER=3.6.6
+PYVER=3.7.0
 PYSETUPTOOLSVER=39.2.0
 PIPVER=18.0
 BOOSTVER=1.68.0
@@ -25,15 +25,14 @@ GNUPLOTVER=5.0.6
 PGPLOTVER=5.2.2
 TCLVER=8.6.8
 BZIPVER=1.0.6
-ZLIBVER=1.2.8 # NB: built conditionally
-XZVER=5.2.4
+ZLIBVER=1.2.11 # NB: built conditionally
 CMAKEVER=3.12.0
 FLACVER=1.3.2
 FREETYPEVER=2.9.1
 CFITSIOVER=3.450
 OPENBLASVER=0.2.20
 
-PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.3 spectrum==0.7.3 tornado==5.1 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 line_profiler==2.1.2 memory_profiler==0.52.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==0.1.6.1"
+PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.4 spectrum==0.7.3 tornado==5.1 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 line_profiler==2.1.2 memory_profiler==0.52.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==0.1.6.1"
 
 # Extra things for grid tools
 GLOBUSVER=6.0.1493989444
@@ -139,18 +138,6 @@ if [ ! -f $SROOT/lib/libz.so -a ! -f /usr/include/zlib.h ]; then
 	make $JFLAG
 	make install
 fi
-
-# XZ
-if [ ! -f $SROOT/bin/xz ]; then
-	cd $1
-	FETCH http://tukaani.org/xz/xz-$XZVER.tar.gz
-	tar xvzf xz-$XZVER.tar.gz
-	cd xz-$XZVER
-	./configure --prefix=$SROOT --enable-shared
-	make $JFLAG
-	make install
-fi
-
 
 # TCL/TK
 if [ ! -f $SROOT/bin/tclsh ]; then
