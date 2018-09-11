@@ -24,7 +24,7 @@ PATH=$SROOT/bin:$PATH
 
 PKG_CONFIG_PATH=$SROOT/lib/pkgconfig:$PKG_CONFIG_PATH
 LD_LIBRARY_PATH=$SROOT/lib:$SROOT/lib64:$LD_LIBRARY_PATH
-PYTHONPATH=$SROOT/lib/python3.6/site-packages:$PYTHONPATH
+PYTHONPATH=$SROOT/lib/python3.7/site-packages:$PYTHONPATH
 MANPATH=$SROOT/man:$SROOT/share/man:$MANPATH
 
 # MPI, if installed
