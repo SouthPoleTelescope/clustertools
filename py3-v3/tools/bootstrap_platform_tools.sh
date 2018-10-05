@@ -62,6 +62,24 @@ else
 	exit 1
 fi
 
+# figure out how to replace text
+TESTFILE=$(mktemp)
+echo "test" > $TESTFILE
+if sed -i 's/test/TEST/g' $TESTFILE; then
+	SEDI () {
+		sed -i $1 $2
+	}
+elif sed -e 's/test/TEST/g' -i '' $TESTFILE; then
+	SEDI () {
+		sed -e $1 -i '' $2
+	}
+else
+	echo "Cannot figure out how to replace text!"
+	exit 1
+fi
+
+exit
+
 set -e 
 trap "echo Build Error" EXIT
 
@@ -434,8 +452,8 @@ EOF
     mkdir -p $SROOT/include/healpix
     install -m 644 include/* $SROOT/include/healpix
     install -m 644 lib/*.a $SROOT/lib
-    sed -i "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
-    sed -i "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
+    SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
+    SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
     install -m 644 lib/healpix.pc $SROOT/lib/pkgconfig
 fi
 
@@ -446,7 +464,7 @@ if [ ! -f $SROOT/lib/libcamb_recfast.a ]; then
     mv $CAMBVER.tar.gz camb-$CAMBVER.tar.gz
     tar xvzf camb-$CAMBVER.tar.gz
     cd CAMB-0.1.7
-    sed -i "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
+    SEDI "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
     make all COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
     make camb_fits COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
     install -m 644 Release/libcamb_recfast.a $SROOT/lib
@@ -489,11 +507,11 @@ if [ ! -f $SROOT/bin/spice ]; then
     cd PolSpice_$SPICEVER
     cd src
     cp Makefile_template Makefile
-    sed -i "s#FC =#FC = $FC#" Makefile
-    sed -i "s#FCFLAGS =#FCFLAGS = -fopenmp -O3#" Makefile
-    sed -i "s#FITSLIB =#FITSLIB = $SROOT/lib#" Makefile
-    sed -i "s#HPXINC = \$(HEALPIX)/include\$(SUFF)#HPXINC = $SROOT/include/healpix#" Makefile
-    sed -i "s#HPXLIB = \$(HEALPIX)/lib\$(SUFF)#HPXLIB = $SROOT/lib#" Makefile
+    SEDI "s#FC =#FC = $FC#" Makefile
+    SEDI "s#FCFLAGS =#FCFLAGS = -fopenmp -O3#" Makefile
+    SEDI "s#FITSLIB =#FITSLIB = $SROOT/lib#" Makefile
+    SEDI "s#HPXINC = \$(HEALPIX)/include\$(SUFF)#HPXINC = $SROOT/include/healpix#" Makefile
+    SEDI "s#HPXLIB = \$(HEALPIX)/lib\$(SUFF)#HPXLIB = $SROOT/lib#" Makefile
     make
     cd -
     install -m 755 bin/spice $SROOT/bin
