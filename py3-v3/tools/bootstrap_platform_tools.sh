@@ -412,24 +412,24 @@ fi
 
 # HEALPIX
 if [ ! -f $SROOT/lib/libhealpix.a ]; then
-    HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
-    cd $1
-    FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
-    tar xvzf Healpix_$HEALPIXVER.tar.gz
-    cd Healpix_$HPXVER
-    cd src/cxx/autotools
-    autoreconf -vifs
-    ./configure --prefix=$SROOT
-    make
-    make install
-    cd -
-    cd src/C/autotools
-    autoreconf -vifs
-    ./configure --prefix=$SROOT
-    make
-    make install
-    cd -
-    ./configure <<EOF
+	HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
+	cd $1
+	FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
+	tar xvzf Healpix_$HEALPIXVER.tar.gz
+	cd Healpix_$HPXVER
+	cd src/cxx/autotools
+	autoreconf -vifs
+	./configure --prefix=$SROOT
+	make
+	make install
+	cd -
+	cd src/C/autotools
+	autoreconf -vifs
+	./configure --prefix=$SROOT
+	make
+	make install
+	cd -
+	./configure <<EOF
 3
 $FC
 
@@ -447,40 +447,40 @@ $SROOT/lib
 
 0
 EOF
-    make
-    install -m 755 bin/* $SROOT/bin
-    mkdir -p $SROOT/include/healpix
-    install -m 644 include/* $SROOT/include/healpix
-    install -m 644 lib/*.a $SROOT/lib
-    SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
-    SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
-    install -m 644 lib/healpix.pc $SROOT/lib/pkgconfig
+	make
+	install -m 755 bin/* $SROOT/bin
+	mkdir -p $SROOT/include/healpix
+	install -m 644 include/* $SROOT/include/healpix
+	install -m 644 lib/*.a $SROOT/lib
+	SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
+	SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
+	install -m 644 lib/healpix.pc $SROOT/lib/pkgconfig
 fi
 
 # CAMB
 if [ ! -f $SROOT/lib/libcamb_recfast.a ]; then
-    cd $1
-    FETCH https://github.com/cmbant/CAMB/archive/$CAMBVER.tar.gz
-    mv $CAMBVER.tar.gz camb-$CAMBVER.tar.gz
-    tar xvzf camb-$CAMBVER.tar.gz
-    cd CAMB-0.1.7
-    SEDI "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
-    make all COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
-    make camb_fits COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
-    install -m 644 Release/libcamb_recfast.a $SROOT/lib
-    install camb camb_fits $SROOT/bin
+	cd $1
+	FETCH https://github.com/cmbant/CAMB/archive/$CAMBVER.tar.gz
+	mv $CAMBVER.tar.gz camb-$CAMBVER.tar.gz
+	tar xvzf camb-$CAMBVER.tar.gz
+	cd CAMB-0.1.7
+	SEDI "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
+	make all COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
+	make camb_fits COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
+	install -m 644 Release/libcamb_recfast.a $SROOT/lib
+	install camb camb_fits $SROOT/bin
 fi
 
 # lenspix
 if [ ! -f $SROOT/bin/simlens ]; then
-    cd $1
-    FETCH https://github.com/cmbant/lenspix/archive/$LENSPIXVER.zip
-    mv $LENSPIXVER.zip lenspix-$LENSPIXVER.zip
-    rm -rf lenspix-$LENSPIXVER
-    unzip lenspix-$LENSPIXVER.zip
-    cd lenspix-$LENSPIXVER
-    cp Makefile Makefile_clustertools
-    cat > makefile.patch <<EOF
+	cd $1
+	FETCH https://github.com/cmbant/lenspix/archive/$LENSPIXVER.zip
+	mv $LENSPIXVER.zip lenspix-$LENSPIXVER.zip
+	rm -rf lenspix-$LENSPIXVER
+	unzip lenspix-$LENSPIXVER.zip
+	cd lenspix-$LENSPIXVER
+	cp Makefile Makefile_clustertools
+	cat > makefile.patch <<EOF
 4c4
 < F90C     = mpif90
 ---
@@ -494,27 +494,27 @@ if [ ! -f $SROOT/bin/simlens ]; then
 ---
 > F90FLAGS = \$(FFLAGS) -I. -I\$(SROOT)/include/healpix -L\$(SROOT)/lib -lcfitsio -L\$(SROOT)/lib -lhealpix -fopenmp
 EOF
-    patch Makefile_clustertools makefile.patch
-    make -f Makefile_clustertools all
-    install -m 755 recon simlens $SROOT/bin
+	patch Makefile_clustertools makefile.patch
+	make -f Makefile_clustertools all
+	install -m 755 recon simlens $SROOT/bin
 fi
 
 #PolSpice
 if [ ! -f $SROOT/bin/spice ]; then
-    cd $1
-    FETCH ftp://ftp.iap.fr/pub/from_users/hivon/PolSpice/PolSpice_$SPICEVER.tar.gz
-    tar xzvf PolSpice_$SPICEVER.tar.gz
-    cd PolSpice_$SPICEVER
-    cd src
-    cp Makefile_template Makefile
-    SEDI "s#FC =#FC = $FC#" Makefile
-    SEDI "s#FCFLAGS =#FCFLAGS = -fopenmp -O3#" Makefile
-    SEDI "s#FITSLIB =#FITSLIB = $SROOT/lib#" Makefile
-    SEDI "s#HPXINC = \$(HEALPIX)/include\$(SUFF)#HPXINC = $SROOT/include/healpix#" Makefile
-    SEDI "s#HPXLIB = \$(HEALPIX)/lib\$(SUFF)#HPXLIB = $SROOT/lib#" Makefile
-    make
-    cd -
-    install -m 755 bin/spice $SROOT/bin
+	cd $1
+	FETCH ftp://ftp.iap.fr/pub/from_users/hivon/PolSpice/PolSpice_$SPICEVER.tar.gz
+	tar xzvf PolSpice_$SPICEVER.tar.gz
+	cd PolSpice_$SPICEVER
+	cd src
+	cp Makefile_template Makefile
+	SEDI "s#FC =#FC = $FC#" Makefile
+	SEDI "s#FCFLAGS =#FCFLAGS = -fopenmp -O3#" Makefile
+	SEDI "s#FITSLIB =#FITSLIB = $SROOT/lib#" Makefile
+	SEDI "s#HPXINC = \$(HEALPIX)/include\$(SUFF)#HPXINC = $SROOT/include/healpix#" Makefile
+	SEDI "s#HPXLIB = \$(HEALPIX)/lib\$(SUFF)#HPXLIB = $SROOT/lib#" Makefile
+	make
+	cd -
+	install -m 755 bin/spice $SROOT/bin
 fi
 
 # Python packages
