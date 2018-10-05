@@ -32,7 +32,12 @@ FREETYPEVER=2.9.1
 CFITSIOVER=3.450
 OPENBLASVER=0.2.20
 
-PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.4 spectrum==0.7.3 tornado==5.1 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==0.1.6.1" # line_profiler==2.1.2
+HEALPIXVER=3.40_2018Jun22
+CAMBVER=0.1.7
+LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
+SPICEVER=v03-05-01
+
+PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.4 spectrum==0.7.3 tornado==5.1 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==$CAMBVER" # line_profiler==2.1.2
 
 # Extra things for grid tools
 GLOBUSVER=6.0.1493989444
@@ -56,6 +61,24 @@ else
 	echo "Cannot figure out how to download things!"
 	exit 1
 fi
+
+# figure out how to replace text
+TESTFILE=$(mktemp)
+echo "test" > $TESTFILE
+if sed -i 's/test/TEST/g' $TESTFILE; then
+	SEDI () {
+		sed -i $1 $2
+	}
+elif sed -e 's/test/TEST/g' -i '' $TESTFILE; then
+	SEDI () {
+		sed -e $1 -i '' $2
+	}
+else
+	echo "Cannot figure out how to replace text!"
+	exit 1
+fi
+
+exit
 
 set -e 
 trap "echo Build Error" EXIT
@@ -385,6 +408,113 @@ if [ ! -f $SROOT/lib/libgsl.so ]; then
 	./configure --prefix=$SROOT
 	make
 	make install
+fi
+
+# HEALPIX
+if [ ! -f $SROOT/lib/libhealpix.a ]; then
+	HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
+	cd $1
+	FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
+	tar xvzf Healpix_$HEALPIXVER.tar.gz
+	cd Healpix_$HPXVER
+	cd src/cxx/autotools
+	autoreconf -vifs
+	./configure --prefix=$SROOT
+	make
+	make install
+	cd -
+	cd src/C/autotools
+	autoreconf -vifs
+	./configure --prefix=$SROOT
+	make
+	make install
+	cd -
+	./configure <<EOF
+3
+$FC
+
+
+
+
+
+
+
+$SROOT/lib
+
+
+
+
+
+0
+EOF
+	make
+	install -m 755 bin/* $SROOT/bin
+	mkdir -p $SROOT/include/healpix
+	install -m 644 include/* $SROOT/include/healpix
+	install -m 644 lib/*.a $SROOT/lib
+	SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
+	SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
+	install -m 644 lib/healpix.pc $SROOT/lib/pkgconfig
+fi
+
+# CAMB
+if [ ! -f $SROOT/lib/libcamb_recfast.a ]; then
+	cd $1
+	FETCH https://github.com/cmbant/CAMB/archive/$CAMBVER.tar.gz
+	mv $CAMBVER.tar.gz camb-$CAMBVER.tar.gz
+	tar xvzf camb-$CAMBVER.tar.gz
+	cd CAMB-0.1.7
+	SEDI "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
+	make all COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
+	make camb_fits COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
+	install -m 644 Release/libcamb_recfast.a $SROOT/lib
+	install camb camb_fits $SROOT/bin
+fi
+
+# lenspix
+if [ ! -f $SROOT/bin/simlens ]; then
+	cd $1
+	FETCH https://github.com/cmbant/lenspix/archive/$LENSPIXVER.zip
+	mv $LENSPIXVER.zip lenspix-$LENSPIXVER.zip
+	rm -rf lenspix-$LENSPIXVER
+	unzip lenspix-$LENSPIXVER.zip
+	cd lenspix-$LENSPIXVER
+	cp Makefile Makefile_clustertools
+	cat > makefile.patch <<EOF
+4c4
+< F90C     = mpif90
+---
+> F90C     = gfortran
+12c12
+< FFLAGS = -O3 -xHost -ip -fpp -error-limit 500 -DMPIPIX -DMPI -heap-arrays
+---
+> FFLAGS = -O3 -cpp
+18c18
+< F90FLAGS = \$(FFLAGS) -I\$(INCLUDE) -I\$(healpix)/include -L\$(cfitsio)/lib -L\$(healpix)/lib \$(LAPACKL) -lcfitsio
+---
+> F90FLAGS = \$(FFLAGS) -I. -I\$(SROOT)/include/healpix -L\$(SROOT)/lib -lcfitsio -L\$(SROOT)/lib -lhealpix -fopenmp
+EOF
+	patch Makefile_clustertools makefile.patch
+	make -f Makefile_clustertools all
+	install -m 755 recon simlens $SROOT/bin
+fi
+
+#PolSpice
+if [ ! -f $SROOT/bin/spice ]; then
+	cd $1
+	FETCH ftp://ftp.iap.fr/pub/from_users/hivon/PolSpice/PolSpice_$SPICEVER.tar.gz
+	tar xzvf PolSpice_$SPICEVER.tar.gz
+	cd PolSpice_$SPICEVER
+	cd src
+	cp Makefile_template Makefile
+	SEDI "s#FC =#FC = $FC#" Makefile
+	SEDI "s#FCFLAGS =#FCFLAGS = -fopenmp -O3#" Makefile
+	SEDI "s#FITSLIB =#FITSLIB = $SROOT/lib#" Makefile
+	SEDI "s#HPXINC = \$(HEALPIX)/include\$(SUFF)#HPXINC = $SROOT/include/healpix#" Makefile
+	SEDI "s#HPXLIB = \$(HEALPIX)/lib\$(SUFF)#HPXLIB = $SROOT/lib#" Makefile
+	make
+	cd -
+	install -m 755 bin/spice $SROOT/bin
 fi
 
 # Python packages
