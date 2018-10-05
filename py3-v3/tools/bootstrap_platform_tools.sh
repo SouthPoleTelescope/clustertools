@@ -37,7 +37,7 @@ CAMBVER=0.1.7
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-05-01
 
-PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.4 spectrum==0.7.3 tornado==5.1 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==0.1.6.1" # line_profiler==2.1.2
+PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.4 spectrum==0.7.3 tornado==5.1 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==$CAMBVER" # line_profiler==2.1.2
 
 # Extra things for grid tools
 GLOBUSVER=6.0.1493989444
@@ -451,8 +451,6 @@ if [ ! -f $SROOT/lib/libcamb_recfast.a ]; then
     make camb_fits COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
     install -m 644 Release/libcamb_recfast.a $SROOT/lib
     install camb camb_fits $SROOT/bin
-    cd pycamb
-    python setup.py install
 fi
 
 # lenspix
