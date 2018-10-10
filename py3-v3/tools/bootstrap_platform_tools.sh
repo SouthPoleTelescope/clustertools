@@ -78,8 +78,6 @@ else
 	exit 1
 fi
 
-exit
-
 set -e 
 trap "echo Build Error" EXIT
 
