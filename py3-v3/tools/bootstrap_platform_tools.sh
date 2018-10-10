@@ -67,11 +67,11 @@ TESTFILE=$(mktemp)
 echo "test" > $TESTFILE
 if sed -i 's/test/TEST/g' $TESTFILE; then
 	SEDI () {
-		sed -i $1 $2
+		sed -i "$1" $2
 	}
 elif sed -e 's/test/TEST/g' -i '' $TESTFILE; then
 	SEDI () {
-		sed -e $1 -i '' $2
+		sed -e "$1" -i '' $2
 	}
 else
 	echo "Cannot figure out how to replace text!"
@@ -433,7 +433,7 @@ $FC
 
 
 
-
+$CC
 
 
 
