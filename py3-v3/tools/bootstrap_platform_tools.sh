@@ -37,7 +37,7 @@ CAMBVER=0.1.7
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-05-01
 
-PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 jupyter==1.0.0 pyfits==3.5 astropy==3.0.4 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 healpy==1.12.8 spectrum==0.7.3 tornado==4.5.3 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 h5py==2.8.0 pandas==0.23.4 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 rst2html5==1.10.1 xhtml2pdf==0.2.3 camb==$CAMBVER" # line_profiler==2.1.2
+PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 tornado==4.5.3 pyfits==3.5 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 rst2html5==1.10.1 xhtml2pdf==0.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 spectrum==0.7.3 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==$CAMBVER h5py==2.8.0 pandas==0.23.4 astropy==3.0.4 healpy==1.12.8 jupyter==1.0.0" # line_profiler==2.1.2
 
 # Extra things for grid tools
 GLOBUSVER=6.0.1493989444
@@ -138,7 +138,7 @@ fi
 # Bzip2
 if [ ! -f $SROOT/bin/bzip2 ]; then
 	cd $1
-	FETCH http://www.bzip.org/$BZIPVER/bzip2-$BZIPVER.tar.gz
+	FETCH http://distfiles.gentoo.org/distfiles/bzip2-$BZIPVER.tar.gz
 	tar xvzf bzip2-$BZIPVER.tar.gz
 	cd bzip2-$BZIPVER
 	make install PREFIX=$SROOT
@@ -336,7 +336,7 @@ if [ ! -f $SROOT/bin/ncdump ]; then
 	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-$NETCDFVER.tar.gz
 	tar xvzf netcdf-$NETCDFVER.tar.gz
 	cd netcdf-$NETCDFVER
-	./configure --prefix=$SROOT --disable-dap
+	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT --disable-dap
 	make $JFLAG
 	make install
 fi
@@ -346,7 +346,7 @@ if [ ! -f $SROOT/lib/libnetcdf_c++4.so ]; then
 	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-cxx4-$NETCDFCXXVER.tar.gz
 	tar xvzf netcdf-cxx4-$NETCDFCXXVER.tar.gz
 	cd netcdf-cxx4-$NETCDFCXXVER
-	./configure --prefix=$SROOT
+	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
 	make $JFLAG
 	make install
 fi
@@ -459,8 +459,7 @@ fi
 if [ ! -f $SROOT/lib/libcamb_recfast.a ]; then
 	cd $1
 	FETCH https://github.com/cmbant/CAMB/archive/$CAMBVER.tar.gz
-	mv $CAMBVER.tar.gz camb-$CAMBVER.tar.gz
-	tar xvzf camb-$CAMBVER.tar.gz
+	tar xvzf $CAMBVER.tar.gz
 	cd CAMB-0.1.7
 	SEDI "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
 	make all COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
@@ -473,9 +472,7 @@ fi
 if [ ! -f $SROOT/bin/simlens ]; then
 	cd $1
 	FETCH https://github.com/cmbant/lenspix/archive/$LENSPIXVER.zip
-	mv $LENSPIXVER.zip lenspix-$LENSPIXVER.zip
-	rm -rf lenspix-$LENSPIXVER
-	unzip lenspix-$LENSPIXVER.zip
+	unzip $LENSPIXVER.zip
 	cd lenspix-$LENSPIXVER
 	cp Makefile Makefile_clustertools
 	cat > makefile.patch <<EOF
@@ -519,13 +516,13 @@ fi
 for pkg in $PYTHON_PKGS_TO_INSTALL; do
 	case $pkg in
 	pyFFTW*)
-		CFLAGS="-I $SROOT/include"  pip install -b $1 pyFFTW
+		CFLAGS="-I $SROOT/include"  pip install --cache-dir $1 -b $1 pyFFTW
 		;;
 	#healpy*)
 	#	pip install -b $1 --global-option --without-native $pkg
 	#	;;
 	*)
-		pip install -b $1 $pkg
+		pip install --cache-dir $1 -b $1 $pkg
 		;;
 	esac
 done
