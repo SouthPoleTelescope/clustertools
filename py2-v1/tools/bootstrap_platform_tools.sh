@@ -119,7 +119,7 @@ fi
 # Bzip2
 if [ ! -f $SROOT/bin/bzip2 ]; then
 	cd $1
-	FETCH http://www.bzip.org/$BZIPVER/bzip2-$BZIPVER.tar.gz
+	FETCH http://distcache.FreeBSD.org/ports-distfiles/bzip2-$BZIPVER.tar.gz
 	tar xvzf bzip2-$BZIPVER.tar.gz
 	cd bzip2-$BZIPVER
 	make install PREFIX=$SROOT
