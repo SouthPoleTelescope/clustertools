@@ -31,6 +31,7 @@ FLACVER=1.3.2
 FREETYPEVER=2.9.1
 CFITSIOVER=3.450
 OPENBLASVER=0.2.20
+SUITESPARSEVER=5.4.0
 
 HEALPIXVER=3.50_2018Dec10
 CAMBVER=0.1.7
@@ -247,7 +248,7 @@ if [ ! -f $SROOT/bin/cmake ]; then
 fi
 
 # OpenBLAS
-if [ ! -f $SROOT/lib/libopenblas.so ]; then
+if [ ! -f $SROOT/lib/libopenblas.so -o ! -f $SROOT/lib/libblas.so ]; then
 	cd $1
 	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
 	tar xvzf v$OPENBLASVER.tar.gz
@@ -258,6 +259,23 @@ if [ ! -f $SROOT/lib/libopenblas.so ]; then
 	else
 		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
 		make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
+	fi
+	ln -s $SROOT/lib/libopenblas.so $SROOT/lib/liblapack.so
+	ln -s $SROOT/lib/libblas.so $SROOT/lib/libblas.so
+fi
+
+# SuiteSparse
+if [ ! -f $SROOT/lib/libspqr.so ]; then
+	cd $1
+	FETCH http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-$SUITESPARSEVER.tar.gz
+	tar xvzf SuiteSparse-$SUITESPARSEVER.tar.gz
+	cd SuiteSparse
+	if [ "`uname -s`" = FreeBSD ]; then
+		gmake $JFLAG library INSTALL=$SROOT
+		gmake install INSTALL=$SROOT
+	else
+		make $JFLAG library INSTALL=$SROOT
+		make install INSTALL=$SROOT
 	fi
 fi
 
