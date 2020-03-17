@@ -16,7 +16,7 @@ PYSETUPTOOLSVER=39.2.0
 PIPVER=18.0
 BOOSTVER=1.68.0
 HDF5VER=1.10.1
-NETCDFVER=4.6.1
+NETCDFVER=4.7.3
 NETCDFCXXVER=4.3.0
 FFTWVER=3.3.8
 GSLVER=2.5
@@ -248,7 +248,7 @@ if [ ! -f $SROOT/bin/cmake ]; then
 fi
 
 # OpenBLAS
-if [ ! -f $SROOT/lib/libopenblas.so -o ! -f $SROOT/lib/libblas.so ]; then
+if [ ! -h $SROOT/lib/libblas.so ]; then
 	cd $1
 	FETCH http://github.com/xianyi/OpenBLAS/archive/v$OPENBLASVER.tar.gz
 	tar xvzf v$OPENBLASVER.tar.gz
@@ -351,9 +351,9 @@ fi
 # NetCDF
 if [ ! -f $SROOT/bin/ncdump ]; then
 	cd $1
-	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-$NETCDFVER.tar.gz
-	tar xvzf netcdf-$NETCDFVER.tar.gz
-	cd netcdf-$NETCDFVER
+	FETCH https://github.com/Unidata/netcdf-c/archive/v$NETCDFVER.tar.gz
+	tar xvzf v$NETCDFVER.tar.gz
+	cd netcdf-c-$NETCDFVER
 	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT --disable-dap
 	make $JFLAG
 	make install
