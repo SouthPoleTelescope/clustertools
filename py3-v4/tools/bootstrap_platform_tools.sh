@@ -465,9 +465,6 @@ if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
 	tar xvzf Healpix_$HEALPIXVER.tar.gz
 	cd Healpix_$HPXVER
-	if ! grep -q AM_PROG_CC_C_O src/common_libraries/libsharp/configure.ac; then
-	    SEDI "/AC_PROG_CC_C99/aAM_PROG_CC_C_O" src/common_libraries/libsharp/configure.ac
-	fi
 	./configure -L <<EOF
 3
 $CC
@@ -490,13 +487,11 @@ $SROOT/lib
 0
 EOF
 	cd src/common_libraries/libsharp
-	autoreconf -vifs
 	./configure --prefix=$SROOT
 	make
 	make install
 	cd -
  	cd src/cxx
- 	autoreconf -vifs
  	CXXFLAGS=-I$SROOT/include CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
  	make
  	make install
