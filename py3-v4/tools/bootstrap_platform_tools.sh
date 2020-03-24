@@ -34,12 +34,11 @@ OPENBLASVER=0.3.9
 SUITESPARSEVER=5.7.1
 
 HEALPIXVER=3.60_2019Dec18
-CAMBVER=0.1.7
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
-SPICEVER=v03-05-01
+SPICEVER=v03-06-04
 
 # Below is (will be) a frozen version of:
-# pip install wheel numpy scipy tornado==4.5.3 ipython pyfits numexpr matplotlib rst2html5 xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb==$CAMBVER h5py pandas astropy healpy jupyter
+# pip install wheel numpy scipy tornado==4.5.3 ipython pyfits numexpr matplotlib rst2html5 xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb==1.1.1 h5py pandas astropy healpy=1.13.0 jupyter
 PYTHON_PKGS_TO_INSTALL=""
 
 # Extra things for grid tools
@@ -435,14 +434,20 @@ if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
 	tar xvzf Healpix_$HEALPIXVER.tar.gz
 	cd Healpix_$HPXVER
-	./configure <<EOF
+	if ! grep -q AM_PROG_CC_C_O src/common_libraries/libsharp/configure.ac; then
+	    SEDI "/AC_PROG_CC_C99/aAM_PROG_CC_C_O" src/common_libraries/libsharp/configure.ac
+	fi
+	./configure -L <<EOF
 3
+$CC
+
 $FC
 
 
+-I$SROOT/include -I\$(F90_INCDIR) -L$SROOT/lib
 
 $CC
-
+-O3 -std=c99 -I$SROOT/include -L$SROOT/lib
 
 
 $SROOT/lib
@@ -453,27 +458,32 @@ $SROOT/lib
 
 0
 EOF
+	cd src/common_libraries/libsharp
+	autoreconf -vifs
+	./configure --prefix=$SROOT
+	make
+	make install
+	cd -
+ 	cd src/cxx
+ 	autoreconf -vifs
+ 	CXXFLAGS=-I$SROOT/include CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
+ 	make
+ 	make install
+ 	cd -
+ 	cd src/C/autotools
+ 	autoreconf -vifs
+ 	CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
+ 	make
+ 	make install
+ 	cd -
 	make
 	install -m 755 bin/* $SROOT/bin
 	mkdir -p $SROOT/include/healpix
-	install -m 644 include/* $SROOT/include/healpix
+	install -m 644 include/*.mod $SROOT/include/healpix
 	install -m 644 lib/*.a $SROOT/lib
-	SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
-	SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
-	install -m 644 lib/healpix.pc $SROOT/lib/pkgconfig
-fi
-
-# CAMB
-if [ ! -f $SROOT/lib/libcamb_recfast.a ]; then
-	cd $1
-	FETCH https://github.com/cmbant/CAMB/archive/$CAMBVER.tar.gz
-	tar xvzf $CAMBVER.tar.gz
-	cd CAMB-0.1.7
-	SEDI "s#\$(HEALPIXDIR)/include#\$(HEALPIXDIR)/include/healpix#" Makefile_main
-	make all COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
-	make camb_fits COMPILER=gfortran HEALPIXDIR=$SROOT FITSDIR=$SROOT/lib
-	install -m 644 Release/libcamb_recfast.a $SROOT/lib
-	install camb camb_fits $SROOT/bin
+	SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/pkgconfig/healpix.pc
+	SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/pkgconfig/healpix.pc
+	install -m 644 lib/pkgconfig/healpix.pc $SROOT/lib/pkgconfig
 fi
 
 # lenspix
@@ -495,7 +505,7 @@ if [ ! -f $SROOT/bin/simlens ]; then
 18c18
 < F90FLAGS = \$(FFLAGS) -I\$(INCLUDE) -I\$(healpix)/include -L\$(cfitsio)/lib -L\$(healpix)/lib \$(LAPACKL) -lcfitsio
 ---
-> F90FLAGS = \$(FFLAGS) -I. -I\$(SROOT)/include/healpix -L\$(SROOT)/lib -lcfitsio -L\$(SROOT)/lib -lhealpix -fopenmp
+> F90FLAGS = \$(FFLAGS) -I. -I\$(SROOT)/include/healpix -L\$(SROOT)/lib -lcfitsio -L\$(SROOT)/lib -lhealpix -lsharp -fopenmp
 EOF
 	patch Makefile_clustertools makefile.patch
 	make -f Makefile_clustertools all
@@ -508,16 +518,11 @@ if [ ! -f $SROOT/bin/spice ]; then
 	FETCH ftp://ftp.iap.fr/pub/from_users/hivon/PolSpice/PolSpice_$SPICEVER.tar.gz
 	tar xzvf PolSpice_$SPICEVER.tar.gz
 	cd PolSpice_$SPICEVER
-	cd src
-	cp Makefile_template Makefile
-	SEDI "s#FC =#FC = $FC#" Makefile
-	SEDI "s#FCFLAGS =#FCFLAGS = -fopenmp -O3#" Makefile
-	SEDI "s#FITSLIB =#FITSLIB = $SROOT/lib#" Makefile
-	SEDI "s#HPXINC = \$(HEALPIX)/include\$(SUFF)#HPXINC = $SROOT/include/healpix#" Makefile
-	SEDI "s#HPXLIB = \$(HEALPIX)/lib\$(SUFF)#HPXLIB = $SROOT/lib#" Makefile
+	mkdir build
+	cd build
+	cmake .. -DHEALPIX=$SROOT -DHEALPIX_INCLUDE=$SROOT/include/healpix -DSHARP_INCLUDES=$SROOT/include
 	make
-	cd -
-	install -m 755 bin/spice $SROOT/bin
+	install -m 755 spice $SROOT/bin
 fi
 
 # Python packages
