@@ -527,7 +527,7 @@ if [ ! -f $SROOT/bin/spice ]; then
 fi
 
 # Python packages
-pip install --cache-dir $1 -b $1 $pkg $PYTHON_PKGS_TO_INSTALL
+pip install --cache-dir $1 -b $1 $PYTHON_PKGS_TO_INSTALL
 
 # Globus
 if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
