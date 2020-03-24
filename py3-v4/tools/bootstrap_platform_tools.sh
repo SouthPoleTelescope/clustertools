@@ -87,6 +87,9 @@ trap "echo Build Error" EXIT
 mkdir -p $SROOT
 mkdir -p $1
 
+mkdir -p $SROOT/lib
+ln -s $SROOT/lib $SROOT/lib64
+
 # Compiler first
 if [ ! -f $SROOT/bin/gcc ]; then
 	unset CC
@@ -179,6 +182,33 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	# TK is an optional dependency
 	(./configure --prefix=$SROOT && make && make install) || true
 	ln -s $SROOT/bin/tclsh8.6 $SROOT/bin/tclsh
+fi
+
+# Python 3.7+ requires OpenSSL >= 1.0.2 and libffi, which certain
+# ancient OSes (RHEL6) don't have. That seems to be the only one we
+# care about, so use a lazy test.
+if (echo $OS_ARCH | grep -q RHEL_6); then
+	OPENSSLVER=1.1.1e
+	FFIVER=3.3
+
+	if [ ! -r $SROOT/lib/libcrypto.so ]; then
+		cd $1
+		FETCH https://www.openssl.org/source/openssl-$OPENSSLVER.tar.gz
+		tar xvzf openssl-$OPENSSLVER.tar.gz
+		cd openssl-$OPENSSLVER
+		./config --prefix=$SROOT
+		make $JFLAG
+		make install
+	fi
+	if [ ! -r $SROOT/lib/libffi.so ]; then
+		cd $1
+		FETCH ftp://sourceware.org/pub/libffi/libffi-$FFIVER.tar.gz
+		tar xvzf libffi-$FFIVER.tar.gz
+		cd libffi-$FFIVER
+		./configure --prefix=$SROOT
+		make $JFLAG
+		make install
+	fi
 fi
 
 # Python
