@@ -37,12 +37,13 @@ HEALPIXVER=3.60_2019Dec18
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-06-04
 
-# Below is (will be) a frozen version of:
-# pip install wheel numpy scipy tornado==4.5.3 ipython pyfits numexpr matplotlib rst2html5 xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb==1.1.1 h5py pandas astropy healpy=1.13.0 jupyter
-PYTHON_PKGS_TO_INSTALL=""
+# Below is a frozen version of (order is important in some cases) as of 3/23/20:
+# pip install wheel rst2html5 numpy scipy tornado ipython pyfits numexpr matplotlib xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb==1.1.1 h5py pandas astropy healpy==1.13.0 jupyter
+PYTHON_PKGS_TO_INSTALL="alabaster==0.7.12 asteval==0.9.18 astropy==4.0 attrs==19.3.0 Babel==2.8.0 backcall==0.1.0 bleach==3.1.3 camb==1.1.1 certifi==2019.11.28 chardet==3.0.4 cycler==0.10.0 decorator==4.4.2 defusedxml==0.6.0 docutils==0.16 entrypoints==0.3 ephem==3.7.7.1 Genshi==0.7.3 h5py==2.10.0 healpy==1.13.0 html5lib==1.0.1 IDLSave==1.0.0 idna==2.9 imagesize==1.2.0 ipdb==0.13.2 ipykernel==5.2.0 ipython==7.13.0 ipython-genutils==0.2.0 ipywidgets==7.5.1 jedi==0.16.0 Jinja2==2.11.1 joblib==0.14.1 jsonschema==3.2.0 jupyter==1.0.0 jupyter-client==6.1.0 jupyter-console==6.1.0 jupyter-core==4.6.3 kiwisolver==1.1.0 lmfit==1.0.0 MarkupSafe==1.1.1 matplotlib==3.2.1 memory-profiler==0.57.0 mistune==0.8.4 mpmath==1.1.0 nbconvert==5.6.1 nbformat==5.0.4 notebook==6.0.3 numexpr==2.7.1 numpy==1.18.2 packaging==20.3 pandas==1.0.3 pandocfilters==1.4.2 parso==0.6.2 pexpect==4.8.0 pickleshare==0.7.5 Pillow==7.0.0 prometheus-client==0.7.1 prompt-toolkit==3.0.4 psutil==5.7.0 ptyprocess==0.6.0 pyFFTW==0.12.0 pyfits==3.5 Pygments==2.0.2 pyparsing==2.4.6 PyPDF2==1.26.0 pyrsistent==0.15.7 python-dateutil==2.8.1 pytz==2019.3 PyYAML==5.3.1 pyzmq==19.0.0 qtconsole==4.7.1 QtPy==1.9.0 reportlab==3.5.42 requests==2.23.0 rst2html5==1.10.3 scipy==1.4.1 Send2Trash==1.5.0 simplejson==3.17.0 six==1.14.0 snowballstemmer==2.0.0 spectrum==0.7.6 Sphinx==2.4.4 sphinxcontrib-applehelp==1.0.2 sphinxcontrib-devhelp==1.0.2 sphinxcontrib-htmlhelp==1.0.3 sphinxcontrib-jsmath==1.0.1 sphinxcontrib-qthelp==1.0.3 sphinxcontrib-serializinghtml==1.1.4 SQLAlchemy==1.3.15 sympy==1.5.1 tables==3.6.1 terminado==0.8.3 testpath==0.4.4 tornado==6.0.4 traitlets==4.3.3 uncertainties==3.1.2 urllib3==1.25.8 urwid==2.1.0 wcwidth==0.1.9 webencodings==0.5.1 widgetsnbextension==3.5.1 xhtml2pdf==0.2.4"
 
 # Extra things for grid tools
-#GLOBUSVER=6.0.1493989444
+GLOBUSVER=6.0.1493989444
+#GFALVER=2.17.2 # Has DEPENDENCIES
 
 # ----------------- Installation---------------------
 
@@ -526,19 +527,7 @@ if [ ! -f $SROOT/bin/spice ]; then
 fi
 
 # Python packages
-for pkg in $PYTHON_PKGS_TO_INSTALL; do
-	case $pkg in
-	pyFFTW*)
-		CFLAGS="-I $SROOT/include"  pip install --cache-dir $1 -b $1 pyFFTW
-		;;
-	#healpy*)
-	#	pip install -b $1 --global-option --without-native $pkg
-	#	;;
-	*)
-		pip install --cache-dir $1 -b $1 $pkg
-		;;
-	esac
-done
+pip install --cache-dir $1 -b $1 $pkg $PYTHON_PKGS_TO_INSTALL
 
 # Globus
 if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
@@ -547,6 +536,19 @@ if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
 	tar xvzf globus_toolkit-$GLOBUSVER.tar.gz
 	cd globus_toolkit-$GLOBUSVER
 	./configure --prefix=$SROOT --enable-myproxy --disable-gsi-openssh --disable-gram5 --enable-shared=no
+	make 
+	make install
+fi
+
+# GFAL
+if [ ! -f $SROOT/bin/gfal-copy -a ! -z "$GFALVER" ]; then
+	cd $1
+	FETCH https://gitlab.cern.ch/dmc/gfal2/-/archive/v$GFALVER/gfal2-v$GFALVER.tar.gz
+	tar xvzf gfal2-v$GFALVER.tar.gz
+	cd gfal2-v$GFALVER
+	mkdir build
+	cd build
+	cmake .. -DCMAKE_INSTALL_PREFIX=$SROOT
 	make 
 	make install
 fi
