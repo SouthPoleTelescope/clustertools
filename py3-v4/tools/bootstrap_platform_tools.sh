@@ -35,7 +35,7 @@ SUITESPARSEVER=5.7.1
 
 HEALPIXVER=3.60_2019Dec18
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
-SPICEVER=v03-06-04
+SPICEVER=v03-06-08
 
 # Below is a frozen version of (order is important in some cases) as of 3/23/20:
 # pip install wheel rst2html5 numpy scipy tornado ipython pyfits numexpr matplotlib xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb==1.1.1 h5py pandas astropy healpy==1.13.0 jupyter
@@ -541,7 +541,7 @@ fi
 #PolSpice
 if [ ! -f $SROOT/bin/spice ]; then
 	cd $1
-	FETCH ftp://ftp.iap.fr/pub/from_users/hivon/PolSpice/PolSpice_$SPICEVER.tar.gz
+	FETCH http://www2.iap.fr/users/hivon/software/PolSpice/ftp/PolSpice_$SPICEVER.tar.gz
 	tar xzvf PolSpice_$SPICEVER.tar.gz
 	cd PolSpice_$SPICEVER
 	mkdir build
