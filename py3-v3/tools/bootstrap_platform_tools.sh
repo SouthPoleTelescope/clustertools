@@ -38,7 +38,7 @@ CAMBVER=0.1.7
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-05-01
 
-PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 tornado==4.5.3 pyfits==3.5 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 rst2html5==1.10.1 xhtml2pdf==0.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 spectrum==0.7.3 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==$CAMBVER h5py==2.8.0 pandas==0.23.4 astropy==3.0.4 healpy==1.12.8 jupyter==1.0.0" # line_profiler==2.1.2
+PYTHON_PKGS_TO_INSTALL="wheel==0.31.1 numpy==1.15.0 scipy==1.1.0 ipython==6.5.0 tornado==4.5.3 pyfits==3.5 numexpr==2.6.6 Cython==0.28.5 matplotlib==2.2.3 rst2html5==1.10.1 xhtml2pdf==0.2.3 Sphinx==1.7.6 tables==3.4.4 urwid==2.0.1 pyFFTW==0.10.4 spectrum==0.7.3 SQLAlchemy==1.2.10 PyYAML==3.13 ephem==3.7.6.0 idlsave==1.0.0 ipdb==0.11 jsonschema==2.6.0 memory_profiler==0.54.0 simplejson==3.16.0 joblib==0.12.2 lmfit==0.9.11 camb==$CAMBVER h5py==2.8.0 pandas==0.23.4 astropy==3.0.4 healpy==1.12.8 jupyter==1.0.0 pytest==6.0.1" # line_profiler==2.1.2
 
 # Extra things for grid tools
 GLOBUSVER=6.0.1493989444
@@ -148,7 +148,7 @@ if [ ! -f $SROOT/bin/bzip2 ]; then
 	make install PREFIX=$SROOT
 	make clean
 	make -f Makefile-libbz2_so PREFIX=$SROOT
-	cp libbz2.so.1.0.6 libbz2.so.1.0 $SROOT/lib
+	cp libbz2.so.$BZIPVER libbz2.so.1.0 $SROOT/lib
 	cd $SROOT/lib
 	ln -s libbz2.so.1.0 libbz2.so
 fi
@@ -167,8 +167,8 @@ fi
 # TCL/TK
 if [ ! -f $SROOT/bin/tclsh ]; then
 	cd $1
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tcl$TCLVER-src.tar.gz
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tk$TCLVER-src.tar.gz
+	FETCH https://prdownloads.sourceforge.net/tcl/tcl$TCLVER-src.tar.gz
+	FETCH https://prdownloads.sourceforge.net/tcl/tk$TCLVER-src.tar.gz
 	tar xvzf tcl$TCLVER-src.tar.gz
 	tar xvzf tk$TCLVER-src.tar.gz
 	cd tcl$TCLVER/unix
@@ -256,7 +256,7 @@ fi
 if [ ! -f $SROOT/lib/libboost_python.so ]; then
 	cd $1
 	tarball=boost_`echo $BOOSTVER | tr . _`
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
+	FETCH https://dl.bintray.com/boostorg/release/$BOOSTVER/source/$tarball.tar.bz2
 	tar xvjf $tarball.tar.bz2
 	cd $tarball
 	./bootstrap.sh --prefix=$SROOT --with-python=$SROOT/bin/python --with-python-root=$SROOT
@@ -291,7 +291,7 @@ if [ ! -h $SROOT/lib/libblas.so ]; then
 		make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	fi
 	ln -s $SROOT/lib/libopenblas.so $SROOT/lib/liblapack.so
-	ln -s $SROOT/lib/libblas.so $SROOT/lib/libblas.so
+	ln -s $SROOT/lib/libopenblas.so $SROOT/lib/libblas.so
 fi
 
 # SuiteSparse
@@ -312,8 +312,8 @@ fi
 # Freetype (needed for matplotlib, not always installed)
 if [ ! -f $SROOT/lib/libfreetype.so ]; then
 	cd $1
-	FETCH http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPEVER.tar.bz2
-	tar xvjf freetype-$FREETYPEVER.tar.bz2
+	FETCH http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPEVER.tar.gz
+	tar xvzf freetype-$FREETYPEVER.tar.gz
 	cd freetype-$FREETYPEVER
 	./configure --prefix=$SROOT
 	make $JFLAG
@@ -323,7 +323,7 @@ fi
 # Gnuplot
 if [ ! -f $SROOT/bin/gnuplot ]; then
 	cd $1
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
+	FETCH https://prdownloads.sourceforge.net/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
 	tar xvzf gnuplot-$GNUPLOTVER.tar.gz
 	cd gnuplot-$GNUPLOTVER
 	./configure --prefix=$SROOT --without-linux-vga --without-lisp-files --with-bitmap-terminals
@@ -460,7 +460,7 @@ fi
 if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
 	cd $1
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
+	FETCH https://prdownloads.sourceforge.net/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
 	tar xvzf Healpix_$HEALPIXVER.tar.gz
 	cd Healpix_$HPXVER
 	cd src/cxx/autotools
@@ -585,6 +585,11 @@ if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
 	make 
 	make install
 fi
+
+# Gfal tools
+for tool in gfal-cat gfal-chmod gfal-copy gfal-ls gfal-mkdir gfal-rename gfal-rm gfal-save gfal-stat gfal-sum gfal-xattr; do
+    ln -s $SROOTBASE/gfal_run.sh $SROOT/bin/$tool
+done
 
 set +e
 rm -rf $1
