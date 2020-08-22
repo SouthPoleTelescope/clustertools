@@ -5,45 +5,41 @@
 JFLAG=-j8
 
 # Versions and tools
-GCCVER=9.3.0
-BINUTILSVER=2.30
-MPCVER=1.1.0
-MPFRVER=4.0.2
+GCCVER=10.1.0
+BINUTILSVER=2.35
+MPCVER=1.2.0
+MPFRVER=4.1.0
 GMPVER=6.2.0
 
-PYVER=3.8.2
-PYSETUPTOOLSVER=46.1.1
-PIPVER=20.0.2
-BOOSTVER=1.72.0
+SQLITEVER=3330000
+PYVER=3.8.5
+PYSETUPTOOLSVER=49.6.0
+PIPVER=20.2.2
+BOOSTVER=1.74.0
 HDF5VER=1.12.0
-NETCDFVER=4.7.3
-NETCDFCXXVER=4.3.0
+NETCDFVER=4.7.4
+NETCDFCXXVER=4.3.1
 FFTWVER=3.3.8
 GSLVER=2.6
 
 GNUPLOTVER=5.2.8
 PGPLOTVER=5.2.2
 TCLVER=8.6.10
-BZIPVER=1.0.6
+BZIPVER=1.0.8
 ZLIBVER=1.2.11 # NB: built conditionally
-CMAKEVER=3.17.0
-FLACVER=1.3.2
-FREETYPEVER=2.9.1
-CFITSIOVER=3.47
-OPENBLASVER=0.3.9
-SUITESPARSEVER=5.7.1
+CMAKEVER=3.18.2
+FLACVER=1.3.3
+FREETYPEVER=2.10.2
+CFITSIOVER=3.49
+OPENBLASVER=0.3.10
+SUITESPARSEVER=5.8.1
 
-HEALPIXVER=3.60_2019Dec18
+HEALPIXVER=3.70_2020Jul23
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-06-08
 
-# Below is a frozen version of (order is important in some cases) as of 3/23/20:
-# pip install wheel rst2html5 numpy scipy tornado ipython pyfits numexpr matplotlib xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb==1.1.1 h5py pandas astropy healpy==1.13.0 jupyter
-PYTHON_PKGS_TO_INSTALL="alabaster==0.7.12 asteval==0.9.18 astropy==4.0 attrs==19.3.0 Babel==2.8.0 backcall==0.1.0 bleach==3.1.3 camb==1.1.1 certifi==2019.11.28 chardet==3.0.4 cycler==0.10.0 decorator==4.4.2 defusedxml==0.6.0 docutils==0.16 entrypoints==0.3 ephem==3.7.7.1 Genshi==0.7.3 h5py==2.10.0 healpy==1.13.0 html5lib==1.0.1 IDLSave==1.0.0 idna==2.9 imagesize==1.2.0 ipdb==0.13.2 ipykernel==5.2.0 ipython==7.13.0 ipython-genutils==0.2.0 ipywidgets==7.5.1 jedi==0.16.0 Jinja2==2.11.1 joblib==0.14.1 jsonschema==3.2.0 jupyter==1.0.0 jupyter-client==6.1.0 jupyter-console==6.1.0 jupyter-core==4.6.3 kiwisolver==1.1.0 lmfit==1.0.0 MarkupSafe==1.1.1 matplotlib==3.2.1 memory-profiler==0.57.0 mistune==0.8.4 mpmath==1.1.0 nbconvert==5.6.1 nbformat==5.0.4 notebook==6.0.3 numexpr==2.7.1 numpy==1.18.2 packaging==20.3 pandas==1.0.3 pandocfilters==1.4.2 parso==0.6.2 pexpect==4.8.0 pickleshare==0.7.5 Pillow==7.0.0 prometheus-client==0.7.1 prompt-toolkit==3.0.4 psutil==5.7.0 ptyprocess==0.6.0 pyFFTW==0.12.0 pyfits==3.5 Pygments==2.0.2 pyparsing==2.4.6 PyPDF2==1.26.0 pyrsistent==0.15.7 python-dateutil==2.8.1 pytz==2019.3 PyYAML==5.3.1 pyzmq==19.0.0 qtconsole==4.7.1 QtPy==1.9.0 reportlab==3.5.42 requests==2.23.0 rst2html5==1.10.3 scipy==1.4.1 Send2Trash==1.5.0 simplejson==3.17.0 six==1.14.0 snowballstemmer==2.0.0 spectrum==0.7.6 Sphinx==2.4.4 sphinxcontrib-applehelp==1.0.2 sphinxcontrib-devhelp==1.0.2 sphinxcontrib-htmlhelp==1.0.3 sphinxcontrib-jsmath==1.0.1 sphinxcontrib-qthelp==1.0.3 sphinxcontrib-serializinghtml==1.1.4 SQLAlchemy==1.3.15 sympy==1.5.1 tables==3.6.1 terminado==0.8.3 testpath==0.4.4 tornado==6.0.4 traitlets==4.3.3 uncertainties==3.1.2 urllib3==1.25.8 urwid==2.1.0 wcwidth==0.1.9 webencodings==0.5.1 widgetsnbextension==3.5.1 xhtml2pdf==0.2.4"
-
-# Extra things for grid tools
-GLOBUSVER=6.0.1493989444
-#GFALVER=2.17.2 # Has DEPENDENCIES
+# Below is a frozen version of (order is important in some cases) as of 8/22/20:
+PYTHON_PKGS_TO_INSTALL="wheel==0.35.1 rst2html5==1.10.1 numpy==1.15.0 scipy==1.1.0 tornado==6.0.4 ipython==7.17.0 pyfits==3.5 numexpr==2.7.1 matplotlib==3.3.1 xhtml2pdf==0.2.4 Sphinx==3.2.1 tables==3.6.1 urwid==2.1.1 pyFFTW==0.12.0 spectrum==0.7.6 SQLAlchemy==1.3.19 PyYAML5.3.1 ephem==3.7.7.1 idlsave==1.0.0 ipdb==0.13.3 jsonschema==3.2.0 memory_profiler==0.57.0 simplejson==3.17.2 joblib==0.16.0 lmfit==1.0.1 camb==1.1.3 h5py==2.10.0 pandas==1.1.1 astropy==4.0.1 healpy==1.14.0 jupyter==1.0.0 pytest==6.0.1"
 
 # ----------------- Installation---------------------
 
@@ -88,7 +84,8 @@ mkdir -p $SROOT
 mkdir -p $1
 
 mkdir -p $SROOT/lib
-ln -s $SROOT/lib $SROOT/lib64
+cd $SROOT
+ln -sf lib lib64
 
 # Compiler first
 if [ ! -f $SROOT/bin/gcc ]; then
@@ -150,7 +147,7 @@ if [ ! -f $SROOT/bin/bzip2 ]; then
 	make install PREFIX=$SROOT
 	make clean
 	make -f Makefile-libbz2_so PREFIX=$SROOT
-	cp libbz2.so.1.0.6 libbz2.so.1.0 $SROOT/lib
+	cp libbz2.so.$BZIPVER libbz2.so.1.0 $SROOT/lib
 	cd $SROOT/lib
 	ln -s libbz2.so.1.0 libbz2.so
 fi
@@ -169,8 +166,8 @@ fi
 # TCL/TK
 if [ ! -f $SROOT/bin/tclsh ]; then
 	cd $1
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tcl$TCLVER-src.tar.gz
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/tcl/Tcl/$TCLVER/tk$TCLVER-src.tar.gz
+	FETCH https://prdownloads.sourceforge.net/tcl/tcl$TCLVER-src.tar.gz
+	FETCH https://prdownloads.sourceforge.net/tcl/tk$TCLVER-src.tar.gz
 	tar xvzf tcl$TCLVER-src.tar.gz
 	tar xvzf tk$TCLVER-src.tar.gz
 	cd tcl$TCLVER/unix
@@ -181,7 +178,8 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	cd tk$TCLVER/unix
 	# TK is an optional dependency
 	(./configure --prefix=$SROOT && make && make install) || true
-	ln -s $SROOT/bin/tclsh8.6 $SROOT/bin/tclsh
+	cd $SROOT/bin
+	ln -s tclsh8.6 tclsh
 fi
 
 # Python 3.7+ requires OpenSSL >= 1.0.2 and libffi, which certain
@@ -211,6 +209,23 @@ if (echo $OS_ARCH | grep -q RHEL_6); then
 	fi
 fi
 
+if [ ! -f $SROOT/bin/sqlite3 ]; then
+	cd $1
+	FETCH https://www.sqlite.org/2020/sqlite-autoconf-$SQLITEVER.tar.gz
+	tar xvzf sqlite-autoconf-$SQLITEVER.tar.gz
+	cd sqlite-autoconf-$SQLITEVER
+	./configure --prefix=$SROOT
+	make $JFLAG
+	make install
+fi
+
+# Python build finished successfully!
+# The necessary bits to build these optional modules were not found:
+# _curses               _curses_panel         _dbm
+# _gdbm                 _lzma                 _sqlite3
+# _uuid                 readline
+# To find the necessary bits, look in setup.py in detect_modules() for the module's name.
+
 # Python
 if [ ! -f $SROOT/bin/python ]; then
 	cd $1
@@ -223,12 +238,16 @@ if [ ! -f $SROOT/bin/python ]; then
 
 	# Make some symlinks that python should make but doesn't
 	PYSHORTVER=`echo $PYVER | cut -d . -f 1,2`
-	ln -s $SROOT/bin/python3 $SROOT/bin/python
-	ln -s $SROOT/bin/python3-config $SROOT/bin/python-config
-	ln -s $SROOT/lib/pkgconfig/python3.pc $SROOT/lib/pkgconfig/python.pc
-	ln -s $SROOT/include/python${PYSHORTVER}m $SROOT/include/python${PYSHORTVER}
+	cd $SROOT/bin
+	ln -s python3 python
+	ln -s python3-config python-config
+	cd $SROOT/lib
+	ln -s pkgconfig/python3.pc pkgconfig/python.pc
+	cd $SROOT/include
+	ln -s python${PYSHORTVER}m python${PYSHORTVER}
 	if [ $(uname -s) == Darwin ]; then
-		ln -s $SROOT/lib/libpython${PYSHORTVER}m.dylib $SROOT/lib/libpython${PYSHORTVER}.dylib
+		cd $SROOT/lib
+		ln -s libpython${PYSHORTVER}m.dylib libpython${PYSHORTVER}.dylib
 	fi
 fi
 
@@ -258,15 +277,17 @@ fi
 if [ ! -r $SROOT/lib/libboost_python.so ]; then
 	cd $1
 	tarball=boost_`echo $BOOSTVER | tr . _`
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/boost/boost/$BOOSTVER/$tarball.tar.bz2
+	FETCH https://dl.bintray.com/boostorg/release/$BOOSTVER/source/$tarball.tar.bz2
 	tar xvjf $tarball.tar.bz2
 	cd $tarball
 	./bootstrap.sh --prefix=$SROOT --with-python=$SROOT/bin/python --with-python-root=$SROOT
 	./b2 $JFLAG
 	./b2 install
 
-	ln -s $SROOT/lib/libboost_python38.so $SROOT/lib/libboost_python3.so
-	ln -s $SROOT/lib/libboost_python3.so $SROOT/lib/libboost_python.so
+	cd $SROOT/lib
+	PYSHORTVER=`echo $PYVER | cut -d . -f 1,2 | tr -d .`
+	ln -s libboost_python$PYSHORTVER.so libboost_python3.so
+	ln -s libboost_python3.so libboost_python.so
 fi
 
 # CMake
@@ -292,8 +313,9 @@ if [ ! -h $SROOT/lib/libblas.so ]; then
 		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
 		make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	fi
-	ln -s $SROOT/lib/libopenblas.so $SROOT/lib/liblapack.so
-	ln -s $SROOT/lib/libblas.so $SROOT/lib/libblas.so
+	cd $SROOT/lib
+	ln -s libopenblas.so liblapack.so
+	ln -s libopenblas.so libblas.so
 fi
 
 # SuiteSparse
@@ -314,8 +336,8 @@ fi
 # Freetype (needed for matplotlib, not always installed)
 if [ ! -f $SROOT/lib/libfreetype.so ]; then
 	cd $1
-	FETCH http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPEVER.tar.bz2
-	tar xvjf freetype-$FREETYPEVER.tar.bz2
+	FETCH http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPEVER.tar.gz
+	tar xvzf freetype-$FREETYPEVER.tar.gz
 	cd freetype-$FREETYPEVER
 	./configure --prefix=$SROOT
 	make $JFLAG
@@ -325,7 +347,7 @@ fi
 # Gnuplot
 if [ ! -f $SROOT/bin/gnuplot ]; then
 	cd $1
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
+	FETCH https://prdownloads.sourceforge.net/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
 	tar xvzf gnuplot-$GNUPLOTVER.tar.gz
 	cd gnuplot-$GNUPLOTVER
 	./configure --prefix=$SROOT --without-linux-vga --without-lisp-files --with-bitmap-terminals --without-latex
@@ -462,20 +484,17 @@ fi
 if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
 	cd $1
-	FETCH http://liquidtelecom.dl.sourceforge.net/project/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
+	FETCH https://prdownloads.sourceforge.net/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
 	tar xvzf Healpix_$HEALPIXVER.tar.gz
 	cd Healpix_$HPXVER
 	./configure -L <<EOF
 3
-$CC
-
 $FC
 
-
--I$SROOT/include -I\$(F90_INCDIR) -L$SROOT/lib
+-I$SROOT/include -I\$(F90_INCDIR) -L$SROOT/lib -fallow-argument-mismatch
 
 $CC
--O3 -std=c99 -I$SROOT/include -L$SROOT/lib
+-O3 -std=c99 -I$SROOT/include -L$SROOT/lib -I\$(HEALPIX)/include
 
 
 $SROOT/lib
@@ -552,31 +571,15 @@ if [ ! -f $SROOT/bin/spice ]; then
 fi
 
 # Python packages
-pip install --cache-dir $1 -b $1 $PYTHON_PKGS_TO_INSTALL
+# one at a time to make sure dependencies are installed in order
+for pkg in $PYTHON_PKGS_TO_INSTALL; do
+    TMP=$1 pip install --cache-dir $1 --no-clean $pkg
+done
 
-# Globus
-if [ ! -f $SROOT/bin/globus-url-copy -a ! -z "$GLOBUSVER" ]; then
-	cd $1
-	FETCH http://downloads.globus.org/toolkit/gt6/stable/installers/src/globus_toolkit-$GLOBUSVER.tar.gz
-	tar xvzf globus_toolkit-$GLOBUSVER.tar.gz
-	cd globus_toolkit-$GLOBUSVER
-	./configure --prefix=$SROOT --enable-myproxy --disable-gsi-openssh --disable-gram5 --enable-shared=no
-	make 
-	make install
-fi
-
-# GFAL
-if [ ! -f $SROOT/bin/gfal-copy -a ! -z "$GFALVER" ]; then
-	cd $1
-	FETCH https://gitlab.cern.ch/dmc/gfal2/-/archive/v$GFALVER/gfal2-v$GFALVER.tar.gz
-	tar xvzf gfal2-v$GFALVER.tar.gz
-	cd gfal2-v$GFALVER
-	mkdir build
-	cd build
-	cmake .. -DCMAKE_INSTALL_PREFIX=$SROOT
-	make 
-	make install
-fi
+# Gfal tools
+for tool in gfal-cat gfal-chmod gfal-copy gfal-ls gfal-mkdir gfal-rename gfal-rm gfal-save gfal-stat gfal-sum gfal-xattr; do
+    ln -s $SROOTBASE/gfal_run.sh $SROOT/bin/$tool
+done
 
 set +e
 rm -rf $1
