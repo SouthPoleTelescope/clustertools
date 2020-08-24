@@ -5,7 +5,7 @@
 JFLAG=-j8
 
 # Versions and tools
-GCCVER=10.1.0
+GCCVER=10.2.0
 BINUTILSVER=2.35
 MPCVER=1.2.0
 MPFRVER=4.1.0
@@ -15,7 +15,7 @@ SQLITEVER=3330000
 PYVER=3.8.5
 PYSETUPTOOLSVER=49.6.0
 PIPVER=20.2.2
-BOOSTVER=1.72.0
+BOOSTVER=1.73.0
 HDF5VER=1.12.0
 NETCDFVER=4.7.4
 NETCDFCXXVER=4.3.1
@@ -108,21 +108,21 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	make $JFLAG; make install
 
 	cd $1
-	FETCH ftp://ftp.gnu.org/gnu/mpc/mpc-$MPCVER.tar.gz
+	FETCH https://ftp.gnu.org/gnu/mpc/mpc-$MPCVER.tar.gz
 	tar xvzf mpc-$MPCVER.tar.gz
 	cd mpc-$MPCVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
 	make $JFLAG; make install
 
 	cd $1
-	FETCH http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILSVER.tar.gz
+	FETCH https://ftp.gnu.org/gnu/binutils/binutils-$BINUTILSVER.tar.gz
 	tar xvzf binutils-$BINUTILSVER.tar.gz
 	cd binutils-$BINUTILSVER
 	./configure --prefix=$SROOT --disable-gprof --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
 	make $JFLAG; make install
 
 	cd $1
-	FETCH http://www.netgull.com/gcc/releases/gcc-$GCCVER/gcc-$GCCVER.tar.gz
+	FETCH https://ftp.gnu.org/gnu/gcc/gcc-$GCCVER/gcc-$GCCVER.tar.gz
 	tar xvzf gcc-$GCCVER.tar.gz
 	cd gcc-$GCCVER
 	# Subshell here prevents some kind of space madness on RHEL6
@@ -222,8 +222,8 @@ fi
 # Python build finished successfully!
 # The necessary bits to build these optional modules were not found:
 # _curses               _curses_panel         _dbm
-# _gdbm                 _lzma                 _sqlite3
-# _uuid                 readline
+# _gdbm                 _lzma                 _uuid
+# readline
 # To find the necessary bits, look in setup.py in detect_modules() for the module's name.
 
 # Python
@@ -489,7 +489,10 @@ if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	cd Healpix_$HPXVER
 	./configure -L <<EOF
 3
+$CC
+
 $FC
+
 
 -I$SROOT/include -I\$(F90_INCDIR) -L$SROOT/lib -fallow-argument-mismatch
 
