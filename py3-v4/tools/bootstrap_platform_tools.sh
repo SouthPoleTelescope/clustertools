@@ -36,7 +36,7 @@ SUITESPARSEVER=5.8.1
 
 HEALPIXVER=3.70_2020Jul23
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
-SPICEVER=v03-06-08
+SPICEVER=v03-07-02
 
 # Below is a frozen version of (order is important in some cases) as of 8/22/20:
 PYTHON_PKGS_TO_INSTALL="wheel==0.35.1 rst2html5==1.10.6 numpy==1.19.1 scipy==1.5.2 tornado==6.0.4 ipython==7.17.0 pyfits==3.5 numexpr==2.7.1 matplotlib==3.3.1 xhtml2pdf==0.2.4 Sphinx==3.2.1 tables==3.6.1 urwid==2.1.1 pyFFTW==0.12.0 spectrum==0.7.6 SQLAlchemy==1.3.19 PyYAML==5.3.1 ephem==3.7.7.1 idlsave==1.0.0 ipdb==0.13.3 jsonschema==3.2.0 memory_profiler==0.57.0 simplejson==3.17.2 joblib==0.16.0 lmfit==1.0.1 camb==1.1.3 h5py==2.10.0 pandas==1.1.1 astropy==4.0.1.post1 healpy==1.14.0 jupyter==1.0.0 pytest==6.0.1"
