@@ -5,41 +5,41 @@
 JFLAG=-j8
 
 # Versions and tools
-GCCVER=10.2.0
-BINUTILSVER=2.35
-MPCVER=1.2.0
+GCCVER=10.3.0
+BINUTILSVER=2.37
+MPCVER=1.2.1
 MPFRVER=4.1.0
-GMPVER=6.2.0
+GMPVER=6.2.1
 
-SQLITEVER=3330000
-PYVER=3.8.5
-PYSETUPTOOLSVER=49.6.0
-PIPVER=20.2.2
-BOOSTVER=1.73.0
-HDF5VER=1.12.0
-NETCDFVER=4.7.4
+SQLITEVER=3370200
+PYVER=3.10.1
+PYSETUPTOOLSVER=60.5.0
+PIPVER=21.3.1
+BOOSTVER=1.78.0
+HDF5VER=1.12.1
+NETCDFVER=4.8.1
 NETCDFCXXVER=4.3.1
-FFTWVER=3.3.8
-GSLVER=2.6
+FFTWVER=3.3.10
+GSLVER=2.7
 
-GNUPLOTVER=5.2.8
+GNUPLOTVER=5.4.3
 PGPLOTVER=5.2.2
 TCLVER=8.6.10
 BZIPVER=1.0.8
 ZLIBVER=1.2.11 # NB: built conditionally
-CMAKEVER=3.18.2
+CMAKEVER=3.22.1
 FLACVER=1.3.3
 FREETYPEVER=2.10.2
 CFITSIOVER=3.49
-OPENBLASVER=0.3.10
-SUITESPARSEVER=5.8.1
+OPENBLASVER=0.3.18
+SUITESPARSEVER=5.10.1
 
-HEALPIXVER=3.70_2020Jul23
+HEALPIXVER=3.80_2021Jun22
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
-SPICEVER=v03-07-02
+SPICEVER=v03-07-03
 
-# Below is a frozen version of (order is important in some cases) as of 8/22/20:
-PYTHON_PKGS_TO_INSTALL="wheel==0.35.1 rst2html5==1.10.6 numpy==1.19.1 scipy==1.5.2 tornado==6.0.4 ipython==7.17.0 pyfits==3.5 numexpr==2.7.1 matplotlib==3.3.1 xhtml2pdf==0.2.4 Sphinx==3.2.1 tables==3.6.1 urwid==2.1.1 pyFFTW==0.12.0 spectrum==0.7.6 SQLAlchemy==1.3.19 PyYAML==5.3.1 ephem==3.7.7.1 idlsave==1.0.0 ipdb==0.13.3 jsonschema==3.2.0 memory_profiler==0.57.0 simplejson==3.17.2 joblib==0.16.0 lmfit==1.0.1 camb==1.1.3 h5py==2.10.0 pandas==1.1.1 astropy==4.0.1.post1 healpy==1.14.0 jupyter==1.0.0 pytest==6.0.1 astroquery==0.4.1 snakemake==6.3.0"
+# Below is a frozen version of (order is important in some cases) as of 1/14/22:
+PYTHON_PKGS_TO_INSTALL="wheel==0.37.1 rst2html5==2.0 numpy==1.22.1 scipy==1.7.3 ipython==8.0.0 numexpr==2.8.1 matplotlib==3.5.1 xhtml2pdf==0.2.5 Sphinx==4.3.2 tables==3.7.0 urwid==2.1.2 pyFFTW==0.13.0 spectrum==0.8.0 SQLAlchemy==1.4.29 PyYAML==6.0 ephem==4.1.3 idlsave==1.0.0 ipdb==0.13.9 jsonschema==4.4.0 memory_profiler==0.60.0 simplejson==3.17.6 joblib==1.1.0 lmfit==1.0.3 camb==1.3.2 h5py==3.6.0 pandas==1.3.5 astropy==5.0 healpy==1.15.0 jupyter==1.0.0 pytest==6.2.5 astroquery==0.4.5 snakemake==6.13.1 jplephem==2.17 scikit-image==0.19.1"
 
 # ----------------- Installation---------------------
 
@@ -182,12 +182,11 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	ln -s tclsh8.6 tclsh
 fi
 
-# Python 3.7+ requires OpenSSL >= 1.0.2 and libffi, which certain
-# ancient OSes (RHEL6) don't have. That seems to be the only one we
+# Python 3.10+ requires OpenSSL >= 1.1, which certain
+# ancient OSes (RHEL7) don't have. That seems to be the only one we
 # care about, so use a lazy test.
-if (echo $OS_ARCH | grep -q RHEL_6); then
-	OPENSSLVER=1.1.1e
-	FFIVER=3.3
+if (echo $OS_ARCH | grep -q RHEL_7); then
+	OPENSSLVER=1.1.1k
 
 	if [ ! -r $SROOT/lib/libcrypto.so ]; then
 		cd $1
@@ -198,20 +197,11 @@ if (echo $OS_ARCH | grep -q RHEL_6); then
 		make $JFLAG
 		make install
 	fi
-	if [ ! -r $SROOT/lib/libffi.so ]; then
-		cd $1
-		FETCH ftp://sourceware.org/pub/libffi/libffi-$FFIVER.tar.gz
-		tar xvzf libffi-$FFIVER.tar.gz
-		cd libffi-$FFIVER
-		./configure --prefix=$SROOT
-		make $JFLAG
-		make install
-	fi
 fi
 
 if [ ! -f $SROOT/bin/sqlite3 ]; then
 	cd $1
-	FETCH https://www.sqlite.org/2020/sqlite-autoconf-$SQLITEVER.tar.gz
+	FETCH https://www.sqlite.org/2022/sqlite-autoconf-$SQLITEVER.tar.gz
 	tar xvzf sqlite-autoconf-$SQLITEVER.tar.gz
 	cd sqlite-autoconf-$SQLITEVER
 	./configure --prefix=$SROOT
@@ -277,7 +267,7 @@ fi
 if [ ! -r $SROOT/lib/libboost_python.so ]; then
 	cd $1
 	tarball=boost_`echo $BOOSTVER | tr . _`
-	FETCH https://dl.bintray.com/boostorg/release/$BOOSTVER/source/$tarball.tar.bz2
+	FETCH https://boostorg.jfrog.io/artifactory/main/release/$BOOSTVER/source/$tarball.tar.bz2
 	tar xvjf $tarball.tar.bz2
 	cd $tarball
 	./bootstrap.sh --prefix=$SROOT --with-python=$SROOT/bin/python --with-python-root=$SROOT
@@ -490,6 +480,7 @@ if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	./configure -L <<EOF
 3
 $CC
+
 
 $FC
 
