@@ -583,7 +583,7 @@ if [ ! -f $SROOT/bin/julia ]; then
 	JVER=$(echo $JULIAVER | cut -f 1,2 -d .)
 	cd $1
 	FETCH https://julialang-s3.julialang.org/bin/linux/x64/$JVER/julia-$JULIAVER-linux-x86_64.tar.gz
-	mkdir $SROOT/opt
+	mkdir -p $SROOT/opt
 	cd $SROOT/opt
 	tar xzvf $1/julia-$JULIAVER-linux-x86_64.tar.gz
 	cd $SROOT/bin
