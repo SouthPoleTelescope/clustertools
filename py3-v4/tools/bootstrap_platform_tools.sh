@@ -587,7 +587,7 @@ if [ ! -f $SROOT/bin/julia ]; then
 	cd $SROOT/opt
 	tar xzvf $1/julia-$JULIAVER-linux-x86_64.tar.gz
 	cd $SROOT/bin
-	ln -s ../opt/julia-$JULIAVER/julia julia
+	ln -s ../opt/julia-$JULIAVER/bin/julia julia
 fi
 
 set +e
