@@ -1,6 +1,9 @@
 #!/bin/sh
 
 case $OS_ARCH in
+    RHEL_8_x86_64)
+        OSG_ARCH=el8-x86_64
+        ;;
     RHEL_7_x86_64)
         OSG_ARCH=el7-x86_64
         ;;
