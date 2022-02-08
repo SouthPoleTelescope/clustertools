@@ -67,13 +67,16 @@ fi
 for name in SROOTBASE SROOT SITE_CMAKE_DIR PATH MANPATH PKG_CONFIG_PATH LD_LIBRARY_PATH PYTHONPATH OS_ARCH GCC_VERSION OMP_NUM_THREADS OPENCL_VENDOR_PATH CC CXX FC
 do
   eval VALUE=\$$name
+  if [ "$name" != "OMP_NUM_THREADS" ]; then
+	VALUE=\"$VALUE\"
+  fi
   case ${SHELL##*/} in 
 	tcsh)
-		echo 'setenv '$name' '\"$VALUE\"' ;' ;;
+		echo 'setenv '$name' '$VALUE' ;' ;;
 	csh)
-		echo 'setenv '$name' '\"$VALUE\"' ;' ;;
+		echo 'setenv '$name' '$VALUE' ;' ;;
 	*)
-		echo 'export '$name=\"$VALUE\"' ;' ;;
+		echo 'export '$name=$VALUE' ;' ;;
   esac
 done
 
