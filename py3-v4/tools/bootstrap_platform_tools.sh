@@ -524,6 +524,8 @@ EOF
 	SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/pkgconfig/healpix.pc
 	SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/pkgconfig/healpix.pc
 	install -m 644 lib/pkgconfig/healpix.pc $SROOT/lib/pkgconfig
+	mkdir -p $SROOT/share/healpix
+	install -m 644 data/* $SROOT/share/healpix
 fi
 
 # lenspix

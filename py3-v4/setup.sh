@@ -32,6 +32,9 @@ if [ -d /usr/lib64/openmpi/bin ]; then
 	PATH=/usr/lib64/openmpi/bin:$PATH
 fi
 
+# GCC
+which gcc 2>/dev/null > /dev/null && : ${GCC_VERSION=`gcc --version | head -1 | cut -d ' ' -f 3`}
+
 # GotoBLAS
 OMP_NUM_THREADS=1
 
@@ -64,7 +67,11 @@ if [ -f $SROOT/share/pgplot/grfont.dat ]; then
     PGPLOT_DEV=/xwin
 fi
 
-for name in SROOTBASE SROOT SITE_CMAKE_DIR PATH MANPATH PKG_CONFIG_PATH LD_LIBRARY_PATH PYTHONPATH OS_ARCH GCC_VERSION OMP_NUM_THREADS OPENCL_VENDOR_PATH CC CXX FC
+# Healpix
+HEALPIX=$SROOT
+HEALPIXDATA=$SROOT/share/healpix
+
+for name in SROOTBASE SROOT SITE_CMAKE_DIR PATH MANPATH PKG_CONFIG_PATH LD_LIBRARY_PATH PYTHONPATH OS_ARCH GCC_VERSION OMP_NUM_THREADS OPENCL_VENDOR_PATH CC CXX FC PGPLOT_DIR PGPLOT_DEV HEALPIX HEALPIXDATA
 do
   eval VALUE=\$$name
   if [ "$name" != "OMP_NUM_THREADS" ]; then

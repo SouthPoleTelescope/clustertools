@@ -501,6 +501,8 @@ EOF
 	SEDI "s#prefix=$PWD#prefix=$SROOT#" lib/healpix.pc
 	SEDI "s#includedir=\${prefix}/include#includedir=\${prefix}/include/healpix#" lib/healpix.pc
 	install -m 644 lib/healpix.pc $SROOT/lib/pkgconfig
+	mkdir -p $SROOT/share/healpix
+	install -m 644 data/* $SROOT/share/healpix
 fi
 
 # CAMB
