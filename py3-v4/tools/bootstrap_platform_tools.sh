@@ -570,7 +570,13 @@ fi
 # Python packages
 # one at a time to make sure dependencies are installed in order
 for pkg in $PYTHON_PKGS_TO_INSTALL; do
-	TMP=$1 pip install --cache-dir $1 --no-clean $pkg
+	case $pkg in
+		camb*)
+			TMP=$1 pip install --cache-dir $1 --no-clean --global-option="build_cluster" $pkg
+			;;
+		*)
+			TMP=$1 pip install --cache-dir $1 --no-clean $pkg
+	esac
 done
 
 # Gfal tools
