@@ -36,7 +36,7 @@ SUITESPARSEVER=5.10.1
 
 HEALPIXVER=3.80_2021Jun22
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
-SPICEVER=v03-07-03
+SPICEVER=v03-07-04
 JULIAVER=1.7.1
 
 # Below is a frozen version of (order is important in some cases) as of 1/14/22:
