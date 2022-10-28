@@ -40,7 +40,7 @@ SPICEVER=v03-07-05
 JULIAVER=1.7.1
 
 # Below is a frozen version of (order is important in some cases) as of 1/14/22:
-PYTHON_PKGS_TO_INSTALL="wheel==0.37.1 rst2html5==2.0 numpy==1.22.1 scipy==1.7.3 ipython==7.31.0 numexpr==2.8.1 matplotlib==3.5.1 xhtml2pdf==0.2.5 Sphinx==4.3.2 tables==3.7.0 urwid==2.1.2 pyFFTW==0.13.0 spectrum==0.8.0 SQLAlchemy==1.4.29 PyYAML==6.0 ephem==4.1.3 idlsave==1.0.0 ipdb==0.13.9 jsonschema==4.4.0 memory_profiler==0.60.0 simplejson==3.17.6 joblib==1.1.0 lmfit==1.0.3 camb==1.3.2 h5py==3.6.0 pandas==1.3.5 astropy==5.0 healpy==1.15.0 jupyter==1.0.0 pytest==6.2.5 astroquery==0.4.5 snakemake==7.9.0 jplephem==2.17 scikit-image==0.19.1 dvc[ssh]==2.9.3 pypatch==1.0.1 photutils==1.4.0 lenspyx==1.0.0"
+PYTHON_PKGS_TO_INSTALL="wheel==0.37.1 rst2html5==2.0 numpy==1.22.1 scipy==1.7.3 ipython==7.31.0 numexpr==2.8.1 matplotlib==3.5.1 xhtml2pdf==0.2.5 Sphinx==4.3.2 tables==3.7.0 urwid==2.1.2 pyFFTW==0.13.0 spectrum==0.8.0 SQLAlchemy==1.4.29 PyYAML==6.0 ephem==4.1.3 idlsave==1.0.0 ipdb==0.13.9 jsonschema==4.4.0 memory_profiler==0.60.0 simplejson==3.17.6 joblib==1.1.0 lmfit==1.0.3 camb==1.3.2 h5py==3.6.0 pandas==1.3.5 astropy==5.0 healpy==1.15.0 jupyter==1.0.0 pytest==6.2.5 astroquery==0.4.5 snakemake==7.9.0 jplephem==2.17 scikit-image==0.19.1 dvc[ssh]==2.9.3 pypatch==1.0.1 photutils==1.4.0 lenspyx==1.0.0 julia==0.5.7"
 
 # ----------------- Installation---------------------
 
