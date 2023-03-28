@@ -19,7 +19,14 @@ esac
 func=`basename $0`
 args=$@
 
-unset PYTHONPATH LD_LIBRARY_PATH PERL5LIB
+for pth in `echo $PATH|tr ":" "\n"`; do
+    if [[ $pth = $SROOTBASE* ]]; then
+        continue
+    fi
+    NEWPATH=$NEWPATH:$pth
+done
+export PATH=$NEWPATH
+unset NEWPATH PYTHONPATH LD_LIBRARY_PATH PERL5LIB
 source /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/current/$OSG_ARCH/setup.sh
 
 exec $func $args
