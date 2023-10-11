@@ -142,7 +142,7 @@ fi
 # Bzip2
 if [ ! -f $SROOT/bin/bzip2 ]; then
 	cd $1
-	FETCH http://distfiles.gentoo.org/distfiles/bzip2-$BZIPVER.tar.gz
+	FETCH https://sourceware.org/pub/bzip2/bzip2-$BZIPVER.tar.gz
 	tar xvzf bzip2-$BZIPVER.tar.gz
 	cd bzip2-$BZIPVER
 	make install PREFIX=$SROOT
