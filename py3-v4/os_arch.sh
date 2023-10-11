@@ -32,8 +32,11 @@ case $DISTRIB in
 		VERSION=`uname -r | cut -d '.' -f 1`
 		;;
 	"Linux")
-		# Damn. Try harder with the heuristics.
-		if echo $VERSION | grep -q '\.el8\.\?'; then
+		# Damn. Try harder with the heuristics.  
+		if echo $VERSION | grep -q '\.el9\.\?'; then
+			DISTRIB="RHEL"
+			VERSION=9
+		elif echo $VERSION | grep -q '\.el8\.\?'; then
 			DISTRIB="RHEL"
 			VERSION=8
 		elif echo $VERSION | grep -q '\.el7\.\?'; then
