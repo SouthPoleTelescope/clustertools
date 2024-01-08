@@ -179,7 +179,7 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	cd tk$TCLVER/unix
 	# TK is an optional dependency
 	./configure --prefix=$SROOT
-	make $FLAG
+	make $JFLAG
 	make install
 	cd $SROOT/bin
 	ln -s tclsh8.6 tclsh
