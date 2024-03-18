@@ -488,10 +488,10 @@ $CC
 $FC
 
 
--I$SROOT/include -I\$(F90_INCDIR) -L$SROOT/lib -fallow-argument-mismatch
+-I$SROOT/include -I\$(F90_INCDIR) -L$SROOT/lib -fallow-argument-mismatch -fPIC
 
 $CC
--O3 -std=c99 -I$SROOT/include -L$SROOT/lib -I\$(HEALPIX)/include
+-O3 -std=c99 -fPIC -I$SROOT/include -L$SROOT/lib -I\$(HEALPIX)/include
 
 
 $SROOT/lib
@@ -503,18 +503,18 @@ $SROOT/lib
 0
 EOF
 	cd src/common_libraries/libsharp
-	./configure --prefix=$SROOT
+	./configure --prefix=$SROOT --with-pic
 	make
 	make install
 	cd -
  	cd src/cxx
- 	CXXFLAGS=-I$SROOT/include CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
+ 	CXXFLAGS=-I$SROOT/include CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT --with-pic
  	make
  	make install
  	cd -
  	cd src/C/autotools
  	autoreconf -vifs
- 	CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
+ 	CFLAGS=-I$SROOT/include LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT --with-pic
  	make
  	make install
  	cd -
