@@ -5,7 +5,7 @@ SBASE=$(cd "$DIR" && echo "$(pwd -L)")
 
 mkdir -p $SBASE/buildlogs
 
-for toolset in py3-v3 py3-v4; do (
+for toolset in py3-v3 py3-v4 py3-v5; do (
 	eval `$SBASE/$toolset/setup.sh | grep -w -e OS_ARCH -e SROOT`
 	logfile=$SBASE/buildlogs/$toolset-$OS_ARCH-`date | tr ' ' _`
 
