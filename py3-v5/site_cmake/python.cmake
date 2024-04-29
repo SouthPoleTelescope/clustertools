@@ -1,7 +1,7 @@
-set(PYTHON_LIBRARIES "$ENV{SROOT}/lib/libpython3.10.so" CACHE FILEPATH "Python library")
-set(PYTHON_INCLUDE_DIR "$ENV{SROOT}/include/python3.10" CACHE PATH "Path the Python include directory")
+set(PYTHON_LIBRARIES "$ENV{SROOT}/lib/libpython3.12.so" CACHE FILEPATH "Python library")
+set(PYTHON_INCLUDE_DIR "$ENV{SROOT}/include/python3.12" CACHE PATH "Path the Python include directory")
 set(PYTHON_EXECUTABLE "$ENV{SROOT}/bin/python" CACHE FILEPATH "Python interpreter")
-set(PYTHON_VERSION "3.10" CACHE STRING "Python version")
+set(PYTHON_VERSION "3.12" CACHE STRING "Python version")
 set(PYTHON_FOUND TRUE CACHE BOOL "Python found")
 
 set(PYTHON_NUMERIC_VERSION 31001)

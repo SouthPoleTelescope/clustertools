@@ -24,11 +24,11 @@ PATH=$SROOT/bin:$PATH
 
 PKG_CONFIG_PATH=$SROOT/lib/pkgconfig:$PKG_CONFIG_PATH
 LD_LIBRARY_PATH=$SROOT/lib:$SROOT/lib64:$LD_LIBRARY_PATH
-PYTHONPATH=$SROOT/lib/python3.10/site-packages:$PYTHONPATH
+PYTHONPATH=$SROOT/lib/python3.12/site-packages:$PYTHONPATH
 MANPATH=$SROOT/man:$SROOT/share/man:$MANPATH
 
 # SSL for python
-SSL_CERT_FILE=$SROOT/lib/python3.10/site-packages/certifi/cacert.pem
+SSL_CERT_FILE=$SROOT/lib/python3.12/site-packages/certifi/cacert.pem
 
 # Suppress python pip version check
 PIP_DISABLE_PIP_VERSION_CHECK=1
