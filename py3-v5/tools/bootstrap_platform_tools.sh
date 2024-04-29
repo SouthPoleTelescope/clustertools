@@ -14,8 +14,6 @@ GMPVER=6.3.0
 SQLITEVER=3450300
 OPENSSLVER=3.0.13
 PYVER=3.12.3
-# PYSETUPTOOLSVER=69.5.1
-# PIPVER=24.0
 BOOSTVER=1.85.0
 HDF5VER=1.14.3
 NETCDFVER=4.9.2
@@ -31,7 +29,7 @@ ZLIBVER=1.3.1 # NB: built conditionally
 CMAKEVER=3.29.2
 FLACVER=1.4.3
 FREETYPEVER=2.13.2
-CFITSIOVER=4.40
+CFITSIOVER=4.4.0
 OPENBLASVER=0.3.27
 SUITESPARSEVER=7.7.0
 
@@ -39,9 +37,6 @@ HEALPIXVER=3.82_2022Jul28
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-08-01
 JULIAVER=1.10.2
-
-# Below is a frozen version of (order is important in some cases) as of 4/29/24:
-PYTHON_PKGS_TO_INSTALL="build wheel rst2html5 numpy scipy ipython numexpr matplotlib xhtml2pdf Sphinx tables urwid pyFFTW spectrum SQLAlchemy PyYAML ephem idlsave ipdb jsonschema memory_profiler simplejson joblib lmfit camb h5py pandas astropy healpy jupyter pytest astroquery snakemake jplephem scikit-image dvc[ssh] pypatch photutils ducc0 lenspyx julia tensorflow scikit-learn jax[cpu] jaxopt xgboost"
 
 # ----------------- Installation---------------------
 
@@ -96,8 +91,8 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	unset FC
 
 	cd $1
-	FETCH http://gmplib.org/download/gmp/gmp-$GMPVER.tar.bz2
-	tar xjvf gmp-$GMPVER.tar.bz2
+	FETCH http://gmplib.org/download/gmp/gmp-$GMPVER.tar.gz
+	tar xzvf gmp-$GMPVER.tar.gz
 	cd gmp-$GMPVER
 	./configure --prefix=$SROOT
 	make $JFLAG; make install
@@ -165,6 +160,16 @@ if [ ! -f $SROOT/lib/libz.so -a ! -f /usr/include/zlib.h ]; then
 	make install
 fi
 
+if [ ! -f $SROOT/bin/sqlite3 ]; then
+	cd $1
+	FETCH https://www.sqlite.org/2024/sqlite-autoconf-$SQLITEVER.tar.gz
+	tar xvzf sqlite-autoconf-$SQLITEVER.tar.gz
+	cd sqlite-autoconf-$SQLITEVER
+	./configure --prefix=$SROOT
+	make $JFLAG
+	make install
+fi
+
 # TCL/TK
 if [ ! -f $SROOT/bin/tclsh ]; then
 	cd $1
@@ -173,7 +178,7 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	tar xvzf tcl$TCLVER-src.tar.gz
 	tar xvzf tk$TCLVER-src.tar.gz
 	cd tcl$TCLVER/unix
-	./configure --prefix=$SROOT --disable-shared
+	./configure --prefix=$SROOT
 	make $JFLAG
 	make install install-libraries
 	cd $1
@@ -189,7 +194,10 @@ fi
 # Python 3.10+ requires OpenSSL >= 1.1, which certain
 # ancient OSes (RHEL7) don't have. That seems to be the only one we
 # care about, so use a lazy test.
+# yum install perl-IPC-Cmd
+# yum install curl-devel
 if (echo $OS_ARCH | grep -q RHEL_7); then
+	rm -rf $SROOT/lib/gcc/x86_64-pc-linux-gnu/$GCCVER/include-fixed/openssl
 	if [ ! -r $SROOT/lib/libcrypto.so ]; then
 		cd $1
 		FETCH https://www.openssl.org/source/openssl-$OPENSSLVER.tar.gz
@@ -201,22 +209,7 @@ if (echo $OS_ARCH | grep -q RHEL_7); then
 	fi
 fi
 
-if [ ! -f $SROOT/bin/sqlite3 ]; then
-	cd $1
-	FETCH https://www.sqlite.org/2024/sqlite-autoconf-$SQLITEVER.tar.gz
-	tar xvzf sqlite-autoconf-$SQLITEVER.tar.gz
-	cd sqlite-autoconf-$SQLITEVER
-	./configure --prefix=$SROOT
-	make $JFLAG
-	make install
-fi
-
-# Python build finished successfully!
-# The necessary bits to build these optional modules were not found:
-# _curses               _curses_panel         _dbm
-# _gdbm                 _lzma                 _uuid
-# readline
-# To find the necessary bits, look in setup.py in detect_modules() for the module's name.
+# yum install libuuid-devel
 
 # Python
 if [ ! -f $SROOT/bin/python ]; then
@@ -233,6 +226,7 @@ if [ ! -f $SROOT/bin/python ]; then
 	cd $SROOT/bin
 	ln -sf python3 python
 	ln -sf python3-config python-config
+	ln -sf pip3 pip
 	cd $SROOT/lib
 	ln -sf pkgconfig/python3.pc pkgconfig/python.pc
 	cd $SROOT/include
@@ -242,28 +236,6 @@ if [ ! -f $SROOT/bin/python ]; then
 		ln -sf libpython${PYSHORTVER}m.dylib libpython${PYSHORTVER}.dylib
 	fi
 fi
-
-# # Python Setuptools
-# if python -c 'import setuptools'; then
-# 	true
-# else
-# 	cd $1
-# 	FETCH https://files.pythonhosted.org/packages/source/s/setuptools/setuptools-$PYSETUPTOOLSVER.tar.gz
-# 	tar xvzf setuptools-$PYSETUPTOOLSVER.tar.gz
-# 	cd setuptools-$PYSETUPTOOLSVER
-# 	python setup.py build
-# 	python setup.py install --prefix=$SROOT
-# fi
-# 
-# # Pip
-# if [ ! -f $SROOT/bin/pip ]; then
-# 	cd $1
-# 	FETCH https://files.pythonhosted.org/packages/source/p/pip/pip-$PIPVER.tar.gz
-# 	tar xvzf pip-$PIPVER.tar.gz
-# 	cd pip-$PIPVER
-# 	python setup.py build
-# 	python setup.py install --prefix=$SROOT
-# fi
 
 # Boost
 if [ ! -r $SROOT/lib/libboost_python.so ]; then
@@ -296,7 +268,7 @@ fi
 if [ ! -h $SROOT/lib/libblas.so ]; then
 	cd $1
 	FETCH http://github.com/OpenMathLib/OpenBLAS/releases/download/v$OPENBLASVER/OpenBLAS-$OPENBLASVER.tar.gz
-	tar xvzf v$OPENBLASVER.tar.gz
+	tar xvzf OpenBLAS-$OPENBLASVER.tar.gz
 	cd OpenBLAS-$OPENBLASVER
 	if [ "`uname -s`" = FreeBSD ]; then
 		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
@@ -316,13 +288,11 @@ if [ ! -f $SROOT/lib/libspqr.so ]; then
 	FETCH https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/refs/tags/v$SUITESPARSEVER.tar.gz
 	tar xvzf v$SUITESPARSEVER.tar.gz
 	cd SuiteSparse-$SUITESPARSEVER
-	if [ "`uname -s`" = FreeBSD ]; then
-		gmake $JFLAG library INSTALL=$SROOT
-		gmake install INSTALL=$SROOT
-	else
-		make $JFLAG library INSTALL=$SROOT
-		make install INSTALL=$SROOT
-	fi
+	mkdir -p build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=$SROOT ..
+	cmake --build . --parallel $JFLAG
+	cmake --install .
 fi
 
 # Freetype (needed for matplotlib, not always installed)
@@ -342,7 +312,7 @@ if [ ! -f $SROOT/bin/gnuplot ]; then
 	FETCH https://prdownloads.sourceforge.net/gnuplot/gnuplot/$GNUPLOTVER/gnuplot-$GNUPLOTVER.tar.gz
 	tar xvzf gnuplot-$GNUPLOTVER.tar.gz
 	cd gnuplot-$GNUPLOTVER
-	./configure --prefix=$SROOT --without-linux-vga --without-lisp-files --with-bitmap-terminals --without-latex
+	./configure --prefix=$SROOT --without-linux-vga --without-lisp-files --with-bitmap-terminals --without-latex --with-qt=no
 	make $JFLAG
 	# Fix brokenness in build system with hard dependencies on optional files
 	touch docs/gnuplot-eldoc.el docs/gnuplot-eldoc.elc
@@ -373,7 +343,7 @@ fi
 # CFITSIO
 if [ ! -f $SROOT/lib/libcfitsio.so ]; then
 	cd $1
-	FETCH http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-$CFITSIOVER.tar.gz
+	FETCH https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-$CFITSIOVER.tar.gz
 	tar xvzf cfitsio-$CFITSIOVER.tar.gz
 	cd cfitsio-$CFITSIOVER
 	./configure --prefix=$SROOT --enable-bzip2=$SROOT
@@ -400,14 +370,14 @@ if [ ! -f $SROOT/bin/ncdump ]; then
 	FETCH https://github.com/Unidata/netcdf-c/archive/v$NETCDFVER.tar.gz
 	tar xvzf v$NETCDFVER.tar.gz
 	cd netcdf-c-$NETCDFVER
-	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT --disable-dap
+	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT --disable-dap --disable-libxml2
 	make $JFLAG
 	make install
 fi
 
 if [ ! -f $SROOT/lib/libnetcdf_c++4.so ]; then
 	cd $1
-	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-cxx4-$NETCDFCXXVER.tar.gz
+	FETCH https://downloads.unidata.ucar.edu/netcdf-cxx/$NETCDFCXXVER/netcdf-cxx4-$NETCDFCXXVER.tar.gz
 	tar xvzf netcdf-cxx4-$NETCDFCXXVER.tar.gz
 	cd netcdf-cxx4-$NETCDFCXXVER
 	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
@@ -477,6 +447,7 @@ if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
 	cd $1
 	FETCH https://prdownloads.sourceforge.net/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
+	rm -rf Healpix-$HPXVER
 	tar xvzf Healpix_$HEALPIXVER.tar.gz
 	cd Healpix_$HPXVER
 	./configure -L <<EOF
@@ -530,6 +501,8 @@ EOF
 fi
 
 # lenspix
+# yum install zip
+# yum install unzip
 if [ ! -f $SROOT/bin/simlens ]; then
 	cd $1
 	FETCH https://github.com/cmbant/lenspix/archive/$LENSPIXVER.zip
@@ -555,7 +528,7 @@ EOF
 	install -m 755 recon simlens $SROOT/bin
 fi
 
-#PolSpice
+# PolSpice
 if [ ! -f $SROOT/bin/spice ]; then
 	cd $1
 	FETCH http://www2.iap.fr/users/hivon/software/PolSpice/ftp/PolSpice_$SPICEVER.tar.gz
@@ -570,15 +543,7 @@ fi
 
 # Python packages
 # one at a time to make sure dependencies are installed in order
-for pkg in $PYTHON_PKGS_TO_INSTALL; do
-	case $pkg in
-		camb*)
-			TMP=$1 pip install --cache-dir $1 --no-clean --global-option="build_cluster" $pkg
-			;;
-		*)
-			TMP=$1 pip install --cache-dir $1 --no-clean $pkg
-	esac
-done
+TMP=$1 pip install --cache-dir $1 --no-clean -r $SROOTBASE/tools/requirements.txt
 
 # Gfal tools
 if [ ! -f $SROOT/bin/gfal-cat ]; then

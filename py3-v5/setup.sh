@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # from bash or tcsh, call this script as:
-# eval `/cvmfs/icecube.opensciencegrid.org/setup.sh`
+# eval `/cvmfs/spt.opensciencegrid.org/py3-v5/setup.sh`
 
 # This is here since readlink -f doesn't work on Darwin
 DIR=$(echo "${0%/*}")
