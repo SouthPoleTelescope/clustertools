@@ -2,7 +2,8 @@
 
 # Usage: bootstrap_platform_tools.sh scratchdir
 
-JFLAG=-j8
+JFLAGN=8
+JFLAG=-j$JFLAGN
 
 # Versions and tools
 GCCVER=13.2.0
@@ -291,7 +292,7 @@ if [ ! -f $SROOT/lib/libspqr.so ]; then
 	mkdir -p build
 	cd build
 	cmake -DCMAKE_INSTALL_PREFIX=$SROOT ..
-	cmake --build . --parallel $JFLAG
+	cmake --build . --parallel $JFLAGN
 	cmake --install .
 fi
 
