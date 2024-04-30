@@ -39,6 +39,7 @@ HEALPIXVER=3.82_2022Jul28
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-08-01
 JULIAVER=1.10.2
+NMTVER=1.6
 
 # ----------------- Installation---------------------
 
