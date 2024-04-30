@@ -15,6 +15,7 @@ GMPVER=6.3.0
 SQLITEVER=3450300
 OPENSSLVER=3.0.13
 PYVER=3.12.3
+PYSHORTVER=`echo $PYVER | cut -d . -f 1,2 | tr -d .`
 BOOSTVER=1.85.0
 HDF5VER=1.14.3
 NETCDFVER=4.9.2
@@ -554,7 +555,7 @@ if [ ! -f $SROOT/bin/gfal-cat ]; then
 fi
 
 # NaMaster
-if [ ! -f $SROOT/lib/python3.12/site-packages/pymaster/__init__.py ]; then
+if [ ! -f $SROOT/lib/python$PYSHORTVER/site-packages/pymaster/__init__.py ]; then
 	cd $1
 	FETCH https://github.com/LSSTDESC/NaMaster/archive/refs/tags/v$NMTVER.tar.gz
 	tar xzvf v$NMTVER.tar.gz
