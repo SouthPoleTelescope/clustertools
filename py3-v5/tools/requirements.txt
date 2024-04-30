@@ -46,3 +46,4 @@ scikit-learn==1.4.2
 jax[cpu]==0.4.26
 jaxopt==0.8.3
 xgboost==2.0.3
+black==24.4.2
