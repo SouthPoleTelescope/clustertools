@@ -552,6 +552,20 @@ if [ ! -f $SROOT/bin/gfal-cat ]; then
 	done
 fi
 
+# NaMaster
+if [ ! -f $SROOT/lib/python3.12/site-packages/pymaster/__init__.py ]; then
+	cd $1
+	FETCH https://github.com/LSSTDESC/NaMaster/archive/refs/tags/v$NMTVER.tar.gz
+	tar xzvf v$NMTVER.tar.gz
+	cd NaMaster-$NMTVER
+	mkdir -p _deps/lib
+	ln -sf $SROOT/lib/libchealpix.a _deps/lib/libchealpix.a
+	mkdir -p _deps/include
+	[ -e _deps/libsharp2 ] || git clone https://gitlab.mpcdf.mpg.de/mtr/libsharp.git _deps/libsharp2
+	echo AM_PROG_CC_C_O >> _deps/libsharp2/configure.ac
+	pip install .
+fi
+
 # Julia
 if [ ! -f $SROOT/bin/julia ]; then
 	JVER=$(echo $JULIAVER | cut -f 1,2 -d .)
