@@ -450,7 +450,7 @@ if [ ! -f $SROOT/lib/libhealpix.a ]; then
 	HPXVER=$(echo $HEALPIXVER | cut -f 1 -d _)
 	cd $1
 	FETCH https://prdownloads.sourceforge.net/healpix/Healpix_$HPXVER/Healpix_$HEALPIXVER.tar.gz
-	rm -rf Healpix-$HPXVER
+	rm -rf Healpix_$HPXVER
 	tar xvzf Healpix_$HEALPIXVER.tar.gz
 	cd Healpix_$HPXVER
 	./configure -L <<EOF
