@@ -22,6 +22,7 @@ Current defined toolsets:
 - py3-v2: Python 3.6.1-based tools (deprecated)
 - py3-v3: Python 3.7.0-based tools (default)
 - py3-v4: Python 3.10.1-based tools (latest)
+- py3-v5: Python 3.12.3-based tools (dev)
 
 Installing software for the first time
 --------------------------------------
