@@ -13,7 +13,7 @@ appropriately. To have this occur on login, add the above line to your .profile,
 .bash_profile, or .csh_profile, depending on which shell you use.
 
 The setup.sh script will point your environment at the standard toolset, which
-is currently py3-v3.
+is currently py3-v4.
 
 Current defined toolsets:
 
