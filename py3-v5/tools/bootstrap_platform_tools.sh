@@ -39,7 +39,6 @@ HEALPIXVER=3.82_2022Jul28
 LENSPIXVER=3c76223024f91f693e422ae89cb1cf2e81e061da
 SPICEVER=v03-08-01
 JULIAVER=1.10.2
-NMTVER=1.6
 
 # ----------------- Installation---------------------
 
@@ -213,6 +212,11 @@ if (echo $OS_ARCH | grep -q RHEL_7); then
 fi
 
 # yum install libuuid-devel
+# The necessary bits to build these optional modules were not found:
+# _curses               _curses_panel         _dbm
+# _gdbm                 _lzma                 _uuid
+# nis                   readline
+# To find the necessary bits, look in configure.ac and config.log.
 
 # Python
 if [ ! -f $SROOT/bin/python ]; then
@@ -555,19 +559,15 @@ if [ ! -f $SROOT/bin/gfal-cat ]; then
 	done
 fi
 
-# NaMaster
-if [ ! -f $SROOT/lib/python$PYSHORTVER/site-packages/pymaster/__init__.py ]; then
-	cd $1
-	FETCH https://github.com/LSSTDESC/NaMaster/archive/refs/tags/v$NMTVER.tar.gz
-	tar xzvf v$NMTVER.tar.gz
-	cd NaMaster-$NMTVER
-	mkdir -p _deps/lib
-	ln -sf $SROOT/lib/libchealpix.a _deps/lib/libchealpix.a
-	mkdir -p _deps/include
-	[ -e _deps/libsharp2 ] || git clone https://gitlab.mpcdf.mpg.de/mtr/libsharp.git _deps/libsharp2
-	echo AM_PROG_CC_C_O >> _deps/libsharp2/configure.ac
-	pip install .
-fi
+# sudo yum install glib2-devel
+# sudo yum install davix-devel
+# sudo yum install cryptopp-devel
+# sudo yum install json-c-devel
+# sudo yum install gtest-devel
+# sudo yum install openldap-devel
+# sudo yum install libattr-devel
+# sudo yum install doxygen
+# sudo yum install pugixml-devel
 
 # Julia
 if [ ! -f $SROOT/bin/julia ]; then
