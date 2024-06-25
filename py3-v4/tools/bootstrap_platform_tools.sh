@@ -88,7 +88,9 @@ mkdir -p $1
 
 mkdir -p $SROOT/lib
 cd $SROOT
-ln -sf lib lib64
+if [ ! -e $SROOT/lib64 ]; then
+	ln -s lib lib64
+fi
 
 # Compiler first
 if [ ! -f $SROOT/bin/gcc ]; then
@@ -174,7 +176,7 @@ if [ ! -f $SROOT/bin/tclsh ]; then
 	tar xvzf tcl$TCLVER-src.tar.gz
 	tar xvzf tk$TCLVER-src.tar.gz
 	cd tcl$TCLVER/unix
-	./configure --prefix=$SROOT --disable-shared
+	./configure --prefix=$SROOT
 	make $JFLAG
 	make install install-libraries
 	cd $1
@@ -410,7 +412,7 @@ fi
 
 if [ ! -f $SROOT/lib/libnetcdf_c++4.so ]; then
 	cd $1
-	FETCH ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-cxx4-$NETCDFCXXVER.tar.gz
+	FETCH https://downloads.unidata.ucar.edu/netcdf-cxx/$NETCDFCXXVER/netcdf-cxx4-$NETCDFCXXVER.tar.gz
 	tar xvzf netcdf-cxx4-$NETCDFCXXVER.tar.gz
 	cd netcdf-cxx4-$NETCDFCXXVER
 	LDFLAGS=-L$SROOT/lib ./configure --prefix=$SROOT
