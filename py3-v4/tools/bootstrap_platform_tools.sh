@@ -601,7 +601,7 @@ if [ ! -f $SROOT/lib/python$PYSHORTVER/site-packages/pymaster/__init__.py ]; the
 	mkdir -p _deps/include
 	[ -e _deps/libsharp2 ] || git clone https://gitlab.mpcdf.mpg.de/mtr/libsharp.git _deps/libsharp2
 	echo AM_PROG_CC_C_O >> _deps/libsharp2/configure.ac
-	pip install .
+	TRAVIS=y pip install .
 fi
 
 # Julia
