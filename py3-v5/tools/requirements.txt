@@ -1,5 +1,5 @@
 # required packages
-setuptools==69.5.1
+setuptools==70.3.0
 wheel==0.43.0
 build==1.2.1
 rst2html5==2.0.1
