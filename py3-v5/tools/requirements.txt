@@ -1,5 +1,6 @@
 # required packages
-setuptools==70.3.0
+setuptools==75.1.0
+setuptools-scm==8.1.0
 wheel==0.43.0
 build==1.2.1
 rst2html5==2.0.1
@@ -25,7 +26,7 @@ joblib==1.4.0
 lmfit==1.3.1
 mpmath==1.3.0
 camb==1.5.4 --config-settings="--global-option='build_cluster'"
-pyFFTW @ git+https://github.com/jsalort/pyFFTW@b61c8be64e3c48b483558106e17fe76087134a32
+pyFFTW==0.14.0
 h5py==3.11.0
 pandas==2.2.2
 astropy==6.0.1
