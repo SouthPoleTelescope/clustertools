@@ -42,12 +42,6 @@ case $DISTRIB in
 		elif echo $VERSION | grep -q '\.el7\.\?'; then
 			DISTRIB="RHEL"
 			VERSION=7
-		elif echo $VERSION | grep -q '\.el6\.\?'; then
-			DISTRIB="RHEL"
-			VERSION=6
-		elif echo $VERSION | grep -q '\.el5\.\?'; then
-			DISTRIB="RHEL"
-			VERSION=5
 		fi
 esac
 

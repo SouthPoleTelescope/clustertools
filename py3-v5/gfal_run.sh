@@ -13,10 +13,6 @@ case $OS_ARCH in
         OSG_ARCH=el7-x86_64
         OSG_VERSION=3.6
         ;;
-    RHEL_6_x86_64)
-        OSG_ARCH=el6-x86_64
-        OSG_VERSION=3.4
-        ;;
     *)
         echo "Unknown architecture"
         exit 1
