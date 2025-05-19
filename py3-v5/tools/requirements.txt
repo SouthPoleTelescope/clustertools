@@ -1,5 +1,5 @@
 # required packages
-setuptools==75.1.0
+setuptools==78.1.1
 setuptools-scm==8.1.0
 wheel==0.43.0
 build==1.2.1
