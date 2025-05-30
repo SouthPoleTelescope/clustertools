@@ -32,20 +32,20 @@ export PATH=$NEWPATH
 unset NEWPATH PYTHONPATH LD_LIBRARY_PATH PERL5LIB
 source /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH/setup.sh
 
-if [ -z "$GRID_TOKEN_FILE" ]; then
+if [ -z "$GRID_TOKEN" ]; then
     TOKEN_FILE="/tmp/token_u$(/usr/bin/id -u)"
     if [ -e $TOKEN_FILE ]; then
-	GRID_TOKEN_FILE=$TOKEN_FILE
+	GRID_TOKEN=$TOKEN_FILE
     fi
 fi
 
-if [ -n "$GRID_TOKEN_FILE" ]; then
-    if [[ $(find "$GRID_TOKEN_FILE" -mtime 72 -print) ]]; then
-	echo "Grid token $GRID_TOKEN_FILE is out of date, please generate a new one using token-init"
+if [ -n "$GRID_TOKEN" ]; then
+    if [[ $(find "$GRID_TOKEN" -mtime 72 -print) ]]; then
+	echo "Grid token $GRID_TOKEN is out of date, please generate a new one using token-init"
 	exit 1
     fi
     unset X509_USER_PROXY
-    export BEARER_TOKEN=`cat $GRID_TOKEN_FILE`
+    export BEARER_TOKEN=`cat $GRID_TOKEN`
 fi
 
 exec $func $args
