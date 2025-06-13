@@ -47,6 +47,9 @@ if [ -n "$GRID_USER_TOKEN" ]; then
     voms-proxy-destroy &> /dev/null
     unset X509_USER_PROXY
     export BEARER_TOKEN=`cat $GRID_USER_TOKEN`
+else
+    echo "Missing grid token, please use token-init to generate one"
+    exit 1
 fi
 
 exec $func $args
