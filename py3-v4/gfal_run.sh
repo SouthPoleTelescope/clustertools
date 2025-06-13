@@ -44,6 +44,7 @@ if [ -n "$GRID_USER_TOKEN" ]; then
 	echo "Grid token $GRID_USER_TOKEN is out of date, please generate a new one using token-init"
 	exit 1
     fi
+    voms-proxy-destroy &> /dev/null
     unset X509_USER_PROXY
     export BEARER_TOKEN=`cat $GRID_USER_TOKEN`
 fi
