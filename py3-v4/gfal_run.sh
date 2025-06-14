@@ -32,7 +32,7 @@ export PATH=$NEWPATH
 unset NEWPATH PYTHONPATH LD_LIBRARY_PATH PERL5LIB
 source /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH/setup.sh
 
-if [ "$USER" != "spt" ]; then
+if [ -z "$SPT_USE_PROXY" ]; then
     if [ -z "$GRID_USER_TOKEN" ]; then
 	TOKEN_FILE="/tmp/token_u$(/usr/bin/id -u)"
 	if [ -e $TOKEN_FILE ]; then
