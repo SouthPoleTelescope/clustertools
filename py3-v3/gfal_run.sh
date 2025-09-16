@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Setup OSG environment
 case $OS_ARCH in
     RHEL_9_x86_64)
         OSG_ARCH=el9-x86_64
@@ -19,8 +20,11 @@ case $OS_ARCH in
         ;;
 esac
 
-func=`basename $0`
-args=$@
+OSG_PATH=/cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH
+if [ ! -e $OSG_PATH ]; then
+    echo "Missing OSG software"
+    exit 1
+fi
 
 for pth in `echo $PATH|tr ":" "\n"`; do
     if [[ $pth = $SROOTBASE* ]]; then
@@ -30,36 +34,51 @@ for pth in `echo $PATH|tr ":" "\n"`; do
 done
 export PATH=$NEWPATH
 unset NEWPATH PYTHONPATH LD_LIBRARY_PATH PERL5LIB
-source /cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH/setup.sh
+source $OSG_PATH/setup.sh
 
-if [ -z "$SPT_USE_PROXY" ]; then
-    if [ -z "$_CONDOR_CREDS" ]; then
-        TOKEN_FILE=`token-info -path`
-        if [ -z "$TOKEN_FILE" ]; then
-            echo "Missing grid token, please use token-init to generate one"
-            exit 1
-        fi
+# Setup grid authentication
+if [ -n "$_CONDOR_CREDS" ] && [ -e "$_CONDOR_CREDS" ]; then
+    # Native credentials in a condor job
 
-        timeleft=`token-info -timeleft`
-        if [[ $timeleft -le 0 ]]; then
-            echo "Grid token $GRID_USER_TOKEN is out of date, please generate a new one using token-init"
-            exit 1
-        fi
-
-        export BEARER_TOKEN=`cat $TOKEN_FILE`
-    else
-        TOKEN_FILE="$_CONDOR_CREDS/scitokens.use"
-        if [ ! -e $TOKEN_FILE ]; then
-            echo "Missing condor token file $TOKEN_FILE"
-            exit 1
-        fi
-
-        export BEARER_TOKEN=$(jq '.access_token' $TOKEN_FILE | tr -d '"')
+    TOKEN_FILE="$_CONDOR_CREDS/scitokens.use"
+    if [ ! -e $TOKEN_FILE ]; then
+        echo "Missing condor token file $TOKEN_FILE"
+        exit 1
     fi
 
+    export BEARER_TOKEN=$(jq '.access_token' $TOKEN_FILE | tr -d '"')
+
+elif [ -z "$SPT_USE_PROXY" ]; then
+    # User-generated token
+
+    TOKEN_FILE=`token-info -path`
+    if [ -z "$TOKEN_FILE" ]; then
+        echo "Missing grid token, please use token-init to generate one"
+        exit 1
+    fi
+
+    timeleft=`token-info -timeleft`
+    if [[ $timeleft -le 0 ]]; then
+        echo "Grid token $TOKEN_FILE is out of date, please generate a new one using token-init"
+        exit 1
+    fi
+
+    export BEARER_TOKEN=`cat $TOKEN_FILE`
+fi
+
+# Token overrides X509 certificate if both are present
+if [ -n "$BEARER_TOKEN" ]; then
     voms-proxy-destroy &> /dev/null
     unset X509_USER_PROXY
 fi
+
+func=`basename $0`
+if [ "$func" == "gfal_run.sh" ]; then
+    echo "Cannot execute $0 directly, must be aliased to a gfal command-line tool"
+    exit 1
+fi
+
+args=$@
 
 set -e
 exec $func $args
