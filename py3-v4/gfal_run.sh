@@ -80,5 +80,9 @@ fi
 
 args=$@
 
+if [ "$func" == "gfal-copy" ]; then
+    echo "$func $args" 1>&2
+fi
+
 set -e
 exec $func $args
