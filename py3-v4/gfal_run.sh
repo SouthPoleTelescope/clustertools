@@ -15,14 +15,14 @@ case $OS_ARCH in
         OSG_VERSION=3.6
         ;;
     *)
-        echo "Unknown architecture"
+        echo "Unknown architecture" 1>&2
         exit 1
         ;;
 esac
 
 OSG_PATH=/cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH
 if [ ! -e $OSG_PATH ]; then
-    echo "Missing OSG software"
+    echo "Missing OSG software" 1>&2
     exit 1
 fi
 
@@ -42,7 +42,7 @@ if [ -n "$_CONDOR_CREDS" ] && [ -e "$_CONDOR_CREDS" ]; then
 
     TOKEN_FILE="$_CONDOR_CREDS/scitokens.use"
     if [ ! -e $TOKEN_FILE ]; then
-        echo "Missing condor token file $TOKEN_FILE"
+        echo "Missing condor token file $TOKEN_FILE" 1>&2
         exit 1
     fi
 
@@ -53,13 +53,13 @@ elif [ -z "$SPT_USE_PROXY" ]; then
 
     TOKEN_FILE=`token-info -path`
     if [ -z "$TOKEN_FILE" ]; then
-        echo "Missing grid token, please use token-init to generate one"
+        echo "Missing grid token, please use token-init to generate one" 1>&2
         exit 1
     fi
 
     timeleft=`token-info -timeleft`
     if [[ $timeleft -le 0 ]]; then
-        echo "Grid token $TOKEN_FILE is out of date, please generate a new one using token-init"
+        echo "Grid token $TOKEN_FILE is out of date, please generate a new one using token-init" 1>&2
         exit 1
     fi
 
@@ -74,7 +74,7 @@ fi
 
 func=`basename $0`
 if [ "$func" == "gfal_run.sh" ]; then
-    echo "Cannot execute $0 directly, must be aliased to a gfal command-line tool"
+    echo "Cannot execute $0 directly, must be aliased to a gfal command-line tool" 1>&2
     exit 1
 fi
 
