@@ -32,7 +32,7 @@ pandas==2.2.2
 astropy==6.0.1
 healpy==1.16.6
 jupyter==1.0.0
-pytest==8.2.0
+pytest==9.0.3
 astroquery==0.4.7
 snakemake==8.11.1
 jplephem==2.22
