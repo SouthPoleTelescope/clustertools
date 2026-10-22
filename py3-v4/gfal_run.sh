@@ -4,11 +4,11 @@
 case $OS_ARCH in
     RHEL_9_x86_64)
         OSG_ARCH=el9-x86_64
-        OSG_VERSION=23-main
+        OSG_VERSION=25-main
         ;;
     RHEL_8_x86_64)
         OSG_ARCH=el8-x86_64
-        OSG_VERSION=23-main
+        OSG_VERSION=25-main
         ;;
     RHEL_7_x86_64)
         OSG_ARCH=el7-x86_64
@@ -20,7 +20,7 @@ case $OS_ARCH in
         ;;
 esac
 
-OSG_PATH=/cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH
+OSG_PATH=/cvmfs/oasis.opensciencegrid.org/mis/osg-wn-client/$OSG_VERSION/current/$OSG_ARCH
 if [ ! -e $OSG_PATH ]; then
     echo "Missing OSG software" 1>&2
     exit 1
