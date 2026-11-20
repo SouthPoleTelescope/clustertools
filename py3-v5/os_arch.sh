@@ -33,7 +33,10 @@ case $DISTRIB in
 		;;
 	"Linux")
 		# Damn. Try harder with the heuristics.  
-		if echo $VERSION | grep -q '\.el9\.\?'; then
+		if echo $VERSION | grep -q '\.el10\.\?'; then
+			DISTRIB="RHEL"
+			VERSION=10
+		elif echo $VERSION | grep -q '\.el9\.\?'; then
 			DISTRIB="RHEL"
 			VERSION=9
 		elif echo $VERSION | grep -q '\.el8\.\?'; then
