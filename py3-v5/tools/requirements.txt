@@ -50,3 +50,4 @@ jax[cpu]==0.4.26
 jaxopt==0.8.3
 xgboost==2.0.3
 black==26.10.1
+pybind11==2.13.6

@@ -93,14 +93,14 @@ if [ ! -f $SROOT/bin/gcc ]; then
 	unset FC
 
 	cd $1
-	FETCH http://gmplib.org/download/gmp/gmp-$GMPVER.tar.gz
+	FETCH https://ftp.gnu.org/gnu/gmp/gmp-$GMPVER.tar.gz
 	tar xzvf gmp-$GMPVER.tar.gz
 	cd gmp-$GMPVER
 	./configure --prefix=$SROOT
 	make $JFLAG; make install
 
 	cd $1
-	FETCH http://www.mpfr.org/mpfr-$MPFRVER/mpfr-$MPFRVER.tar.gz
+	FETCH https://ftp.gnu.org/gnu/mpfr/mpfr-$MPFRVER.tar.gz
 	tar xvzf mpfr-$MPFRVER.tar.gz
 	cd mpfr-$MPFRVER
 	./configure --prefix=$SROOT --with-gmp-include=$SROOT/include --with-gmp-lib=$SROOT/lib
@@ -278,10 +278,10 @@ if [ ! -h $SROOT/lib/libblas.so ]; then
 	tar xvzf OpenBLAS-$OPENBLASVER.tar.gz
 	cd OpenBLAS-$OPENBLASVER
 	if [ "`uname -s`" = FreeBSD ]; then
-		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
+		gmake $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 shared
 		gmake install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	else
-		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 libs netlib shared
+		make $JFLAG DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1 shared
 		make install DYNAMIC_ARCH=1 PREFIX=$SROOT USE_THREAD=1
 	fi
 	cd $SROOT/lib
@@ -362,8 +362,11 @@ fi
 # HDF5
 if [ ! -f $SROOT/bin/h5ls ]; then
 	cd $1
-	FETCH http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-$(echo $HDF5VER | cut -f 1,2 -d .)/hdf5-$HDF5VER/src/hdf5-$HDF5VER.tar.bz2
-	tar xvjf hdf5-$HDF5VER.tar.bz2
+	HDF5VERU=$(echo $HDF5VER | tr '.' '_')
+	HDF5VERS=$(echo $HDF5VER | cut -f 1,2 -d . | tr '.' '_')
+	FETCH https://support.hdfgroup.org/releases/hdf5/v$HDF5VERS/v$HDF5VERU/downloads/hdf5-$HDF5VER.tar.gz
+	tar xvzf hdf5-$HDF5VER.tar.gz
+	mv hdfsrc hdf5-$HDF5VER
 	cd hdf5-$HDF5VER
 	export HDF5_CC=$SROOT/bin/gcc
 	./configure --prefix=$SROOT --enable-build-mode=production --enable-cxx --enable-strict-format-checks --with-zlib=/usr
